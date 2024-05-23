@@ -1,0 +1,12 @@
+.env
+*.log
+*.log.*
+~*
+*.swp
+.DS_Store
+.idea
+node_modules
+npm-debug.log
+keys.json
+key.json
+*.pem
