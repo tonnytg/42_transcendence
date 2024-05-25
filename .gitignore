@@ -10,5 +10,6 @@ npm-debug.log
 keys.json
 key.json
 *.pem
+*.pyc
 
 __pycache__
