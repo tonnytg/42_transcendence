@@ -55,6 +55,11 @@ MIDDLEWARE = [
 # Login URL
 LOGIN_URL = 'login'
 
+# Configuration for 42 OAuth
+CLIENT_ID_42 = os.environ.get('APP_AUTH_CLIENT_ID')
+CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
+REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
+
 ROOT_URLCONF = 'transcendence.urls'
 
 TEMPLATES = [
@@ -82,11 +87,11 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'transcendence',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': '5432',
+        'HOST': os.environ.get('APP_DB_HOST'),
+        'PORT': os.environ.get('APP_DB_PORT'),
+        'NAME': os.environ.get('APP_DB_NAME'),
+        'USER': os.environ.get('APP_DB_USER'),
+        'PASSWORD': os.environ.get('APP_DB_PASSWORD'),
     }
 }
 
