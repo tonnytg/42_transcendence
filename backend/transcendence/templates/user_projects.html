@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Projects</title>
+  <style>
+    .project {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .project h2 {
+      margin-top: 0;
+    }
+    .project p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>User Projects</h1>
+<!-- 
+  {
+    "id":3626387,
+    "occurrence":1,
+    "final_mark":100,
+    "status":"finished",
+    "validated?":true,
+    "current_team_id":5654469,
+    "project":{
+       "id":1983,
+       "name":"Inception",
+       "slug":"inception",
+       "parent_id":"None"
+    },
+    "cursus_ids":[
+       21
+    ],
+    "marked_at":"2024-04-25T19:20:55.088Z",
+    "marked":true,
+    "retriable_at":"2024-04-26T19:20:55.231Z",
+    "created_at":"2024-04-03T14:59:37.109Z",
+    "updated_at":"2024-04-25T19:20:55.250Z",
+    "user":{
+       "id":110272,
+       "email":"antthoma@student.42sp.org.br",
+       "login":"antthoma",
+       "first_name":"Antonio",
+       "last_name":"Thomacelli gomes",
+       "usual_full_name":"Antonio Thomacelli Gomes",
+       "usual_first_name":"None",
+       "url":"https://api.intra.42.fr/v2/users/antthoma",
+       "phone":"hidden",
+       "displayname":"Antonio Thomacelli Gomes",
+       "kind":"student",
+       "image":{
+          "link":"None",
+          "versions":{
+             "large":"None",
+             "medium":"None",
+             "small":"None",
+             "micro":"None"
+          }
+       },
+       "staff?":false,
+       "correction_point":4,
+       "pool_month":"april",
+       "pool_year":"2022",
+       "location":"None",
+       "wallet":193,
+       "anonymize_date":"2027-05-25T00:00:00.000-03:00",
+       "data_erasure_date":"2027-05-25T00:00:00.000-03:00",
+       "created_at":"2022-03-24T13:57:29.470Z",
+       "updated_at":"2024-05-22T22:19:52.343Z",
+       "alumnized_at":"None",
+       "alumni?":false,
+       "active?":true
+    },
+    "teams":[
+       {
+          "id":5621361,
+          "name":"antthoma's group",
+          "url":"https://api.intra.42.fr/v2/teams/5621361",
+          "final_mark":0,
+          "project_id":1983,
+          "created_at":"2024-04-03T14:59:37.131Z",
+          "updated_at":"2024-04-23T12:55:17.366Z",
+          "status":"finished",
+          "terminating_at":"None",
+          "users":[
+             {
+                "id":110272,
+                "login":"antthoma",
+                "url":"https://api.intra.42.fr/v2/users/antthoma",
+                "leader":true,
+                "occurrence":0,
+                "validated":true,
+                "projects_user_id":3626387
+             }
+          ],
+          "locked?":true,
+          "validated?":false,
+          "closed?":true,
+          "repo_url":"git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-727fe8be-16d5-4682-bf3a-17cf8ba96897-5621361-antthoma",
+          "repo_uuid":"intra-uuid-727fe8be-16d5-4682-bf3a-17cf8ba96897-5621361-antthoma",
+          "locked_at":"2024-04-03T14:59:37.163Z",
+          "closed_at":"2024-04-23T11:29:52.165Z",
+          "project_session_id":6098,
+          "project_gitlab_path":"pedago_world/42-cursus/inner-circle/inception"
+       },
+       {
+          "id":5654469,
+          "name":"antthoma's group-1",
+          "url":"https://api.intra.42.fr/v2/teams/5654469",
+          "final_mark":100,
+          "project_id":1983,
+          "created_at":"2024-04-24T13:12:10.708Z",
+          "updated_at":"2024-04-25T19:20:55.277Z",
+          "status":"finished",
+          "terminating_at":"None",
+          "users":[
+             {
+                "id":110272,
+                "login":"antthoma",
+                "url":"https://api.intra.42.fr/v2/users/antthoma",
+                "leader":true,
+                "occurrence":1,
+                "validated":true,
+                "projects_user_id":3626387
+             }
+          ],
+          "locked?":true,
+          "validated?":true,
+          "closed?":true,
+          "repo_url":"git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-d00f5a38-7622-477c-9097-bfbbe5282d65-5654469-antthoma",
+          "repo_uuid":"intra-uuid-d00f5a38-7622-477c-9097-bfbbe5282d65-5654469-antthoma",
+          "locked_at":"2024-04-24T13:12:10.737Z",
+          "closed_at":"2024-04-24T13:42:35.564Z",
+          "project_session_id":6098,
+          "project_gitlab_path":"pedago_world/42-cursus/inner-circle/inception"
+       }
+    ]
+ } -->
+
+  {% for project in projects %}
+  <div class="project">
+    <h2>{{ project.project.name }}</h2>
+    <p><strong>Mark:</strong> {{ project.final_mark }}</p>
+    <p><strong>Status:</strong> {{ project.status }}</p>
+    <p><strong>Repo URL:</strong> <a href="{{ project.teams.0.repo_url }}" target="_blank">{{ project.teams.0.repo_url }}</a></p>
+  </div>
+  {% endfor %}
+</body>
+</html>
