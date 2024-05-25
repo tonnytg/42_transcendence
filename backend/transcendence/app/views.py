@@ -4,9 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.conf import settings
 import requests
+from django.contrib.auth.models import User
 
 
-# Dummy user data
+# Data
 users = [
     {
         "name": "Antonio Thomacelli Gomes",
@@ -40,45 +41,54 @@ users = [
     }
 ]
 
-def oauth2_callback(request):
-    # Verifica se o código de autorização foi fornecido na query string da URL
+# Remote authentication
+def oauth_callback(request):
     code = request.GET.get('code')
     if code:
-        # Constrói a URL para trocar o código de autorização por um token de acesso
         token_url = 'https://api.intra.42.fr/oauth/token'
         payload = {
             'client_id': settings.CLIENT_ID_42,
             'client_secret': settings.CLIENT_SECRET_42,
             'code': code,
-            'redirect_uri': 'http://localhost:8000/oauth2/v2/redirect',
+            'redirect_uri': settings.REDIRECT_URI_42,
             'grant_type': 'authorization_code'
         }
-        # Envia uma solicitação POST para obter o token de acesso
         response = requests.post(token_url, data=payload)
         if response.status_code == 200:
-            # Se a solicitação for bem-sucedida, você pode processar o token de acesso aqui
             access_token = response.json()['access_token']
-            # Redirecione para a função get_user_projects
+            user_info_url = 'https://api.intra.42.fr/v2/me'
+            user_info_response = requests.get(user_info_url, headers={'Authorization': 'Bearer ' + access_token})
+            if user_info_response.status_code == 200:
+                user_info = user_info_response.json()
+                user_id = user_info['id']
+                username = user_info['login']
+                email = user_info['email']
+                first_name = user_info['first_name']
+                last_name = user_info['last_name']
 
-            # curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" https://api.intra.42.fr/oauth/token/info
-            token_info = requests.get('https://api.intra.42.fr/oauth/token/info', headers={'Authorization': 'Bearer ' + access_token})
-            if token_info.status_code == 200:
-                user_id = token_info.json()['resource_owner_id']
-                print(user_id)
+                # Get or create the user
+                user, created = User.objects.get_or_create(username=username, defaults={
+                    'email': email,
+                    'first_name': first_name,
+                    'last_name': last_name
+                })
+
+                if created:
+                    user.set_unusable_password()
+                    user.save()
+
+                # Authenticate the user
+                login(request, user)
+
+                return redirect('homepage')
             else:
-                return HttpResponse('Erro ao obter informações do token de acesso')
-            
-            user_id = token_info.json()['resource_owner_id']
-
-            return get_user_projects(request, access_token, user_id)
+                return HttpResponse('Erro ao obter informações do usuário')
         else:
-            # Se a solicitação falhar, você pode lidar com isso adequadamente, como exibindo uma mensagem de erro
             return HttpResponse('Erro ao obter token de acesso')
     else:
-        # Se não houver código de autorização, redirecione para a página de erro
         return HttpResponse('Código de autorização não fornecido')
-    
 
+# Local authentication
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -97,25 +107,11 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+# Pages
 def index(request):
     context = {
         "datas": users,
-        "CLIENT_ID_42": settings.CLIENT_ID_42
+        "CLIENT_ID_42": settings.CLIENT_ID_42,
+        "REDIRECT_URI_42": settings.REDIRECT_URI_42
     }
     return render(request, "index.html", context)
-
-def get_user_projects(request, access_token, user_id):
-    # Construa a URL do endpoint de projetos do usuário com o user_id
-    projects_url = f'https://api.intra.42.fr/v2/users/{user_id}/projects_users'
-    headers = {
-        'Authorization': 'Bearer ' + access_token
-    }
-    response = requests.get(projects_url, headers=headers)
-    if response.status_code == 200:
-        # Se a solicitação for bem-sucedida, você pode processar os projetos do usuário aqui
-        projects = response.json()
-        # Renderize a página com os projetos do usuário
-        return render(request, 'user_projects.html', {'projects': projects})
-    else:
-        # Se a solicitação falhar, você pode lidar com isso adequadamente, como exibindo uma mensagem de erro
-        return HttpResponse('Erro ao obter projetos do usuário')
