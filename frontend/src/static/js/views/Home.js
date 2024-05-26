@@ -1,0 +1,17 @@
+import AbstractView from "./AbstractView.js";
+
+export default class extends AbstractView {
+    constructor() {
+        super();
+        this.setTitle("Home");
+    }
+
+    async getHtml() {
+        return `
+            <h1>Home</h1>
+            <p>
+                <a href="/profile" data-link>Profile</a>
+            </p>
+        `;
+    }
+}

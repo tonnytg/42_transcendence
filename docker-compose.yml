@@ -19,6 +19,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "3000:3000"
+
 volumes:
   postgres_data:
   backend_data:
