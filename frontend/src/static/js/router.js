@@ -1,12 +1,18 @@
 import Home from "./views/Home.js";
-import Login from "./views/Login.js";
+import Game from "./views/Game.js";
 import Profile from "./views/Profile.js";
+import Dashboard from "./views/Dashboard.js";
+import Chat from "./views/Chat.js";
+import Invite from "./views/Invite.js"
 
 // Definição das rotas
 const routes = [
     { path: "/", view: Home },
-    { path: "/login", view: Login },
+    { path: "/game", view: Game },
     { path: "/profile", view: Profile },
+    { path: "/dashboard", view: Dashboard },
+    { path: "/chat", view: Chat },
+    { path: "/invite", view: Invite },
 ];
 
 // Função do roteador para gerenciar as rotas

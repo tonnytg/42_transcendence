@@ -3,15 +3,12 @@ import AbstractView from "./AbstractView.js";
 export default class extends AbstractView {
     constructor() {
         super();
-        this.setTitle("Home");
+        this.setTitle("Dashboard");
     }
 
     async getHtml() {
         return `
-            <h1>Home</h1>
+            <h1>Profile</h1>
         `;
     }
 }
-// <p>
-//     <a href="/game" data-link>Game</a>
-// </p>
