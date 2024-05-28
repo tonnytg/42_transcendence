@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app'
 ]
 
 MIDDLEWARE = [
@@ -46,15 +49,23 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
+
+# Login URL
+LOGIN_URL = 'login'
+
+# Configuration for 42 OAuth
+CLIENT_ID_42 = os.environ.get('APP_AUTH_CLIENT_ID')
+CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
+REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
 
 ROOT_URLCONF = 'transcendence.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +86,12 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.environ.get('APP_DB_HOST'),
+        'PORT': os.environ.get('APP_DB_PORT'),
+        'NAME': os.environ.get('APP_DB_NAME'),
+        'USER': os.environ.get('APP_DB_USER'),
+        'PASSWORD': os.environ.get('APP_DB_PASSWORD'),
     }
 }
 
@@ -116,6 +131,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Where to store static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
+
+# Base url to serve media files
+MEDIA_URL = '/media/'
+
+# Diretório onde os arquivos de mídia serão salvos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
