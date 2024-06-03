@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os
 
 # Load environment variables from .env file
@@ -148,3 +149,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# JWT Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+} # REST_FRAMEWORK is a dictionary that contains the default authentication classes
+
+# SIMPLE_JWT is a dictionary that contains the access token and refresh token lifetime
+# The access token lifetime is 5 minutes and the refresh token lifetime is 1 day
+# The access token is used to authenticate the user and the refresh token is used to get a new access token
+#   - The access token is used to authenticate the user in the system and it has a short lifetime becase it is a security measure
+# The refresh token is used to get a new access token
+#   - It`s necessary to use the refresh token because the access token lifetime is short and the user would have to login again every 5 minutes
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
