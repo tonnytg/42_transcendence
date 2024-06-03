@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro - Transcendence Pongo</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    * {
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    body, html {
+        height: 100vh;
+        margin: 0;
+    }
+
+    .bg-image {
+        background-image: url('./ben-neale-zpxKdH_xNSI-unsplash\ \(1\).jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .navbar-brand, a {
+        color: white;
+    }
+
+    .footer {
+        color: white;
+        padding: 10px 0;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-container {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        border-radius: 8px;
+    }
+</style>
+</head>
+<body class="bg-image">
+<nav class="navbar navbar-expand-lg navbar-transparent">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Logo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="btn btn-outline-light" href="#">Registro</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="d-flex flex-column justify-content-center align-items-center vh-100">
+    <div class="form-container text-white">
+        <h1>Registro</h1>
+        <p class="lead">Cadastre-se para explorar o desafio e emoção do nosso jogo!</p>
+        <form>
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" placeholder="Digite sua senha">
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2024 Transcendence Pongo. Todos os direitos reservados.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
