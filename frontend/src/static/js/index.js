@@ -1,25 +1,33 @@
-import { handleRouting, navigateTo } from "./router.js";
+import { handleRouting, handleNavigation } from "./router.js";
+import { handleAuthActions } from "./services/auth.js";
 
-// Função para adicionar event listener aos links de navegação
-const addNavigationListener = () => {
+/**
+ * Adds event listeners for navigation and authentication actions.
+ *
+ * Attaches a click event listener to the document body to handle navigation and
+ * authentication actions.
+ * Attaches a popstate event listener to the window to handle browser history
+ * navigation.
+ */
+const addEventListeners = () => {
     document.body.addEventListener("click", (e) => {
-        if (e.target.matches("[data-link]")) {
-            e.preventDefault();
-            navigateTo(e.target.href);
-        }
+        handleNavigation(e);
+        handleAuthActions(e);
     });
+
+    window.addEventListener("popstate", handleRouting);
 }
 
-// Função para inicializar os event listeners
+/**
+ * Initializes event listeners after the DOM content is loaded and handles
+ * initial routing.
+ *
+ * Adds event listeners for navigation and authentication actions, as well as
+ * for popstate events. Calls handleRouting to set up the initial route.
+ */
 const initializeEventListeners = () => {
-    // Event listener para o evento 'DOMContentLoaded' (carregamento da página)
     document.addEventListener("DOMContentLoaded", () => {
-        addNavigationListener();
-
-        // Event listener para o evento 'popstate' (navegação do histórico)
-        window.addEventListener("popstate", handleRouting);
-
-        // Chama o roteador para a rota inicial
+        addEventListeners();
         handleRouting();
     });
 }
