@@ -32,18 +32,17 @@
                     <li><a href="/invite" class="nav-link px-2" data-link>Invite Friends</a></li>
                 </ul>
             </div>
-            <div id="logout-bar">
-                <div class="col-md-3 text-end">
-                    <button id="logoutButton" type="button" class="btn btn-outline-primary me-2" onclick="logoutAction()">Logout</button>
-                </div>
-            </div>            
-            {% else %}
-            <p>Transcendence</p>
-            <div id="login-bar">
-                <div class="col-md-3 text-end">
-                    <button id="signInButton" type="button" class="btn btn-outline-primary me-2" onclick="loginAction()">Login</button>
-                </div>
+            <div class="col-md-3 text-end">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Logout</button>
+                </form>
             </div>
+            {% else %}
+                <div class="col-md-3 text-end">
+                    <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
+                        class="btn btn-primary">Login 42</a>
+                </div>
             {% endif %}
         </header>
     </div>
