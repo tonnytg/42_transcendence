@@ -13,3 +13,4 @@ key.json
 *.pyc
 
 __pycache__
+.ruff.toml
