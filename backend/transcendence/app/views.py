@@ -6,7 +6,6 @@ from django.conf import settings
 import requests
 from django.contrib.auth.models import User
 
-
 # Data
 users = [
     {
@@ -39,6 +38,12 @@ users = [
         "linkedin_url": "https://www.linkedin.com/in/ygor-sena/",
         "github_url": "https://github.com/ygor-sena"
     }
+]
+
+texts = [
+    "This is the first section",
+    "This is the second section",
+    "This is the third section"
 ]
 
 # Remote authentication
@@ -115,3 +120,12 @@ def index(request):
         "REDIRECT_URI_42": settings.REDIRECT_URI_42
     }
     return render(request, "index.html", context)
+
+def game(request):
+    return render(request, "game.html")
+
+def section(request, num):
+    if 1 <= num <= 3:
+        return HttpResponse(texts[num-1])
+    else:
+        return HttpResponse("Invalid section number")
