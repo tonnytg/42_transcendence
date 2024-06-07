@@ -1,5 +1,4 @@
-// auth.js
-const signIn = () => {
+export const signIn = () => {
     console.log("Sign-in function called");
 }
 
@@ -14,10 +13,10 @@ const signUp = () => {
  * @param {Event} e - The event object.
  */
 export const handleAuthActions = (e) => {
-    if (e.target.matches("#signInButton")) {
+    if (e.target.id === "signInButton") {
         e.preventDefault();
         signIn();
-    } else if (e.target.matches("#signUpButton")) {
+    } else if (e.target.id === "signUpButton") {
         e.preventDefault();
         signUp();
     }
