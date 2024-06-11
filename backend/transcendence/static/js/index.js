@@ -1,5 +1,4 @@
 import { Router } from "./Router.js";
-
 import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
 
 // Route definitions

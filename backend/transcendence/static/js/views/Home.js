@@ -1,6 +1,5 @@
 import AbstractView from "./AbstractView.js";
 
-// export default class extends AbstractView {
 export class Home extends AbstractView {
     constructor() {
         super();
@@ -13,6 +12,3 @@ export class Home extends AbstractView {
         `;
     }
 }
-// <p>
-//     <a href="/game" data-link>Game</a>
-// </p>
