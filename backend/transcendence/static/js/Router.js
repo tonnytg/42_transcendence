@@ -11,7 +11,8 @@ class Router {
     }
 
     async navigateTo(path, addToHistory = true) {
-        if (addToHistory) {
+        const currentPath = window.location.pathname;
+        if (addToHistory && currentPath !== path) {
             window.history.pushState({}, '', path);
         }
         await this.handleRouting();
