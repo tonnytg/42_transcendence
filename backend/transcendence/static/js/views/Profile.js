@@ -1,6 +1,6 @@
 import AbstractView from "./AbstractView.js";
 
-export default class extends AbstractView {
+export class Profile extends AbstractView {
     constructor() {
         super();
         this.setTitle("Profile");

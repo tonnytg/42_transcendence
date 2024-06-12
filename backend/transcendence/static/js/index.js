@@ -1,21 +1,17 @@
-import { handleRouting, handleNavigation } from "./router.js";
-import { handleAuthActions } from "./services/auth.js";
+import { Router } from "./Router.js";
+import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
 
+// Route definitions
+const routes = [
+    { path: "/", view: Home },
+    { path: "/game", view: Game },
+    { path: "/profile", view: Profile },
+    { path: "/dashboard", view: Dashboard },
+    { path: "/chat", view: Chat },
+    { path: "/invite", view: Invite },
+];
 
+const app = document.querySelector("#app");
+const router = new Router(routes);
 
-const addEventListeners = () => {
-    document.body.addEventListener("click", (e) => {
-        handleNavigation(e);
-    });
-
-    window.addEventListener("popstate", handleRouting);
-}
-
-const initializeEventListeners = () => {
-    document.addEventListener("DOMContentLoaded", () => {
-        addEventListeners();
-        handleRouting();
-    });
-}
-
-initializeEventListeners();
+router.init(app);

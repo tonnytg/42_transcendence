@@ -48,23 +48,10 @@
     </div>
 
     <div class="b-example-divider"></div>
-
     <div id="app"></div>
+
     {% load static %}
     <script type="module" src="{% static 'js/index.js' %}"></script>
-    <script>
-        // Definindo a função loginAction no escopo global
-        window.loginAction = () => {
-            console.log("Login button clicked");
-            window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-69813f6d434e40ee5bb3cad43e1b52f0285d015bb9b53a643c7bd810edd5e9c0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Flogin%2Foauth%2Fcallback&response_type=code";
-        }
-
-        // Definindo a função logoutAction no escopo global
-        window.logoutAction = () => {
-            console.log("Logout button clicked");
-            window.location.href = "http://localhost:8000/logout";
-        }
-    </script>
 
 </body>
 

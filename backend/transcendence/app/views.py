@@ -9,42 +9,43 @@ from django.contrib.auth.models import User
 # Data
 users = [
     {
-        "name": "Antonio Thomacelli Gomes",
-        "about": "GCP Cloud and Software Engineer",
-        "linkedin_url": "https://www.linkedin.com/in/thomacelli/",
-        "github_url": "https://github.com/tonnytg"
+        'name': 'Antonio Thomacelli Gomes',
+        'about': 'GCP Cloud and Software Engineer',
+        'linkedin_url': 'https://www.linkedin.com/in/thomacelli/',
+        'github_url': 'https://github.com/tonnytg',
     },
     {
-        "name": "Carlos Rocha",
-        "about": "Coordenador de Dados e Operações @ SESC SP Serviço Social do Comércio | AWS Certified",
-        "linkedin_url": "https://www.linkedin.com/in/carlos-rocha-tech/",
-        "github_url": "https://github.com/carlosrocha-dev"
+        'name': 'Carlos Rocha',
+        'about': 'Coordenador de Dados e Operações @ SESC SP Serviço Social do Comércio | AWS Certified',
+        'linkedin_url': 'https://www.linkedin.com/in/carlos-rocha-tech/',
+        'github_url': 'https://github.com/carlosrocha-dev',
     },
     {
-        "name": "Marcelo Magalhães",
-        "about": "Engenharia de Software | 42SP | C/C++ | Golang | Linux",
-        "linkedin_url": "https://www.linkedin.com/in/marcelo-magalh%C3%A3es-445a29a4/",
-        "github_url": "https://github.com/magalhaesm"
+        'name': 'Marcelo Magalhães',
+        'about': 'Engenharia de Software | 42SP | C/C++ | Golang | Linux',
+        'linkedin_url': 'https://www.linkedin.com/in/marcelo-magalhaes-/',
+        'github_url': 'https://github.com/magalhaesm',
     },
     {
-        "name": "Gilmar Romani",
-        "about": "Desenvolvedor Back-End | .NET | C# | C | Redis | RabbitMQ | SQL | AWS | Linux | Git | Jira",
-        "linkedin_url": "https://www.linkedin.com/in/gilmar-romani/",
-        "github_url": "https://github.com/gialexan"
+        'name': 'Gilmar Romani',
+        'about': 'Desenvolvedor Back-End | .NET | C# | C | Redis | RabbitMQ | SQL | AWS | Linux | Git | Jira',
+        'linkedin_url': 'https://www.linkedin.com/in/gilmar-romani/',
+        'github_url': 'https://github.com/gialexan',
     },
     {
-        "name": "Ygor de Goes Sena",
-        "about": "Engenheiro de Software • Back-end • DevOps • UI/UX Designer",
-        "linkedin_url": "https://www.linkedin.com/in/ygor-sena/",
-        "github_url": "https://github.com/ygor-sena"
-    }
+        'name': 'Ygor de Goes Sena',
+        'about': 'Engenheiro de Software • Back-end • DevOps • UI/UX Designer',
+        'linkedin_url': 'https://www.linkedin.com/in/ygor-sena/',
+        'github_url': 'https://github.com/ygor-sena',
+    },
 ]
 
 texts = [
-    "This is the first section",
-    "This is the second section",
-    "This is the third section"
+    'This is the first section',
+    'This is the second section',
+    'This is the third section',
 ]
+
 
 # Remote authentication
 def oauth_callback(request):
@@ -56,13 +57,15 @@ def oauth_callback(request):
             'client_secret': settings.CLIENT_SECRET_42,
             'code': code,
             'redirect_uri': settings.REDIRECT_URI_42,
-            'grant_type': 'authorization_code'
+            'grant_type': 'authorization_code',
         }
         response = requests.post(token_url, data=payload)
         if response.status_code == 200:
             access_token = response.json()['access_token']
             user_info_url = 'https://api.intra.42.fr/v2/me'
-            user_info_response = requests.get(user_info_url, headers={'Authorization': 'Bearer ' + access_token})
+            user_info_response = requests.get(
+                user_info_url, headers={'Authorization': 'Bearer ' + access_token}
+            )
             if user_info_response.status_code == 200:
                 user_info = user_info_response.json()
                 user_id = user_info['id']
@@ -72,11 +75,14 @@ def oauth_callback(request):
                 last_name = user_info['last_name']
 
                 # Get or create the user
-                user, created = User.objects.get_or_create(username=username, defaults={
-                    'email': email,
-                    'first_name': first_name,
-                    'last_name': last_name
-                })
+                user, created = User.objects.get_or_create(
+                    username=username,
+                    defaults={
+                        'email': email,
+                        'first_name': first_name,
+                        'last_name': last_name,
+                    },
+                )
 
                 if created:
                     user.set_unusable_password()
@@ -93,6 +99,7 @@ def oauth_callback(request):
     else:
         return HttpResponse('Código de autorização não fornecido')
 
+
 # Local authentication
 def login_view(request):
     if request.method == 'POST':
@@ -108,24 +115,29 @@ def login_view(request):
     else:
         return redirect('homepage')
 
+
 def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+
 # Pages
 def index(request):
     context = {
-        "datas": users,
-        "CLIENT_ID_42": settings.CLIENT_ID_42,
-        "REDIRECT_URI_42": settings.REDIRECT_URI_42
+        'datas': users,
+        'CLIENT_ID_42': settings.CLIENT_ID_42,
+        'REDIRECT_URI_42': settings.REDIRECT_URI_42,
     }
-    return render(request, "index.html", context)
+    return render(request, 'index.html', context)
+
 
 def game(request):
-    return render(request, "game.html")
+    return render(request, 'game.html')
+
 
 def section(request, num):
     if 1 <= num <= 3:
-        return HttpResponse(texts[num-1])
+        return HttpResponse(texts[num - 1])
     else:
-        return HttpResponse("Invalid section number")
+        return HttpResponse('Invalid section number')
+
