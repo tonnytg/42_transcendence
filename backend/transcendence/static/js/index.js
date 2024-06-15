@@ -1,5 +1,8 @@
 import { Router } from "./Router.js";
 import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
+import './components/header.js';
+import './components/footer.js';
+
 
 // Route definitions
 const routes = [

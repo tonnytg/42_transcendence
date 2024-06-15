@@ -1,6 +1,13 @@
-export const signIn = () => {
-    console.log("Sign-in function called");
+export const isAuthenticated = () => {
+    const token = localStorage.getItem('authToken');
+    return token !== null;
 }
+
+export const signIn = (token) => {
+    localStorage.setItem('authToken', token);
+    console.log("Sign-in function called, token saved");
+}
+
 
 const signUp = () => {
     console.log("Sign-up function called");
