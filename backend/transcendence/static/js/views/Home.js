@@ -7,12 +7,14 @@ export class Home extends AbstractView {
     }
 
     async getHtml() {
-        return `
-                <main class="container col-md-5">
-                    <img src="/static/images/logo.png" class="mb-4">
-                    <p class="lead">Pong brings back the excitement of the classic arcade game! Face off against your friends or challenge the AI in thrilling matches. Customize the visuals with epic backgrounds and show off your skills. Enter the arena and relive the nostalgia in grand style. Play now and become the legend of Pong!</p>
-                </main>
-                `
+            return `
+            <AppHome
+                user-authenticated="true"
+                user-name="user.name"
+                client-id-42="client_id"
+                redirect-uri-42="redirect_uri"
+                csrf-token="csrf_token">
+            </AppHome>`;
     }
 }
 

@@ -16,50 +16,31 @@ class AppHeader extends HTMLElement {
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
                     ${userAuthenticated ? `
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="d-block link-body-emphasis text-decoration-none" aria-expanded="false">
-                            <img src="https://github.com/mdo.png" alt="mdo" width="64" height="64" class="rounded-circle fw-bold border-white">
-                        </a>
-                        <span class="fw-bold text-dark">Bem-vindo(a), ${userName}!</span>
-                    </div>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <nav class="navbar navbar-expand-lg navbar-dark">
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" aria-current="page" href="/">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" href="/game">Game</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" href="/invite">Friends</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" href="/chat">Chat</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" href="/dashboard">Dashboard</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link fw-bold" href="#">Profile</a>
-                                </li>
-                            </ul>
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="d-block link-body-emphasis text-decoration-none" aria-expanded="false">
+                                <img src="https://avataaars.io/?avatarStyle=Circle&topType=NoHair&accessoriesType=Blank&facialHairType=BeardMajestic&facialHairColor=Black&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Serious&skinColor=DarkBrown" alt="mdo" width="64" height="64" class="rounded-circle fw-bold border-white">
+                            </a>
+                            <span class="fw-bold text-white">Bem-vindo(a),&nbsp;&nbsp;${userName}!</span>
                         </div>
-                    </nav>
-                    <div class="d-flex align-items-center">
-                        <form method="post" action="/logout">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-                            <button type="submit" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16">Logout</button>
-                        </form>
-                    </div>
+                        <nav class="nav nav-masthead col-md-6 justify-content-center">
+                            <a class="nav-link fw-bold px-2 py-1 active" aria-current="page" href="/">Home</a>
+                            <a class="nav-link fw-bold px-2 py-1" href="/game">Game</a>
+                            <a class="nav-link fw-bold px-2 py-1" href="/invite">Friends</a>
+                            <a class="nav-link fw-bold px-2 py-1" href="/chat">Chat</a>
+                            <a class="nav-link fw-bold px-2 py-1" href="/dashboard">Dashboard</a>
+                            <a class="nav-link fw-bold px-2 py-1" href="#">Profile</a>
+                        </nav>
+                        <div class="d-flex align-items-center">
+                            <form method="post" action="{% url 'logout' %}">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                                <button type="submit" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16">Logout</button>
+                            </form>
+                        </div>
                     ` : `
-                    <div class="d-flex align-items-center">
-                        <a href="https://api.intra.42.fr/oauth/authorize?client_id=${clientId42}&redirect_uri=${redirectUri42}&response_type=code" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16 mx-8 p-8">Login 42</a>
-                        <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16">Register</a>
-                    </div>
+                        <div class="d-flex align-items-center">
+                            <a href="https://api.intra.42.fr/oauth/authorize?client_id=${clientId42}&redirect_uri=${redirectUri42}&response_type=code" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16 mx-8 p-8">Login 42</a>
+                            <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white mt-16">Register</a>
+                        </div>
                     `}
                 </div>
             </div>
