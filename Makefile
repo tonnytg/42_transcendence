@@ -10,6 +10,8 @@ clean:
 fclean: clean
 	docker system prune --all --force
 
+re: clean all
+
 shell:
 	@read -p "=> Enter service: " service; \
 	docker-compose exec -it $$service /bin/sh
