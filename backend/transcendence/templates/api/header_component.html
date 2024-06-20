@@ -7,14 +7,9 @@
         </a>
         <span class="fw-bold text-white">Bem-vindo(a),&nbsp;&nbsp;{{ user.username }}!</span>
     </div>
-    <nav class="nav nav-masthead col-md-6 justify-content-center">
-        <a data-link class="nav-link fw-bold px-2 py-1 active" aria-current="page" href="/">Home</a>
-        <a data-link class="nav-link fw-bold px-2 py-1" href="/game">Game</a>
-        <a data-link class="nav-link fw-bold px-2 py-1" href="/invite">Friends</a>
-        <a data-link class="nav-link fw-bold px-2 py-1" href="/chat">Chat</a>
-        <a data-link class="nav-link fw-bold px-2 py-1" href="/dashboard">Dashboard</a>
-        <a data-link class="nav-link fw-bold px-2 py-1" href="#">Profile</a>
-    </nav>
+
+    <app-nav> </app-nav>
+
     <div class="d-flex align-items-center">
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
