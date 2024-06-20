@@ -1,4 +1,4 @@
-class AppFooter extends HTMLElement {
+class Footer extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -50,10 +50,10 @@ class AppFooter extends HTMLElement {
             </footer>
         `;
 
-        this.shadowRoot.getElementById('toggle-theme-btn').addEventListener('click', () => {
-            window.toggleTheme();
-        });
+        // this.shadowRoot.querySelector('#toggle-theme-btn').addEventListener('click', () => {
+        //     window.toggleTheme();
+        // });
     }
 }
 
-customElements.define('app-footer', AppFooter);
+customElements.define('app-footer', Footer);

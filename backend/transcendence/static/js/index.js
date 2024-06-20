@@ -1,10 +1,6 @@
 import { Router } from "./Router.js";
 import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
-import './components/header.js';
-import './components/footer.js';
-import './components/homeComponent.js';
-import './components/pongGame.js';
-import { toggleTheme } from './themeToggle.js';
+import "./components/index.js";
 
 // Route definitions
 const routes = [
@@ -19,6 +15,5 @@ const routes = [
 const app = document.querySelector("#app");
 const router = new Router(routes);
 
+window.router = router;
 router.init(app);
-
-window.toggleTheme = toggleTheme;

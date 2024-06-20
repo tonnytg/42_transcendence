@@ -7,14 +7,9 @@ export class Home extends AbstractView {
     }
 
     async getHtml() {
-            return `
-            <AppHome
-                user-authenticated="true"
-                user-name="user.name"
-                client-id-42="client_id"
-                redirect-uri-42="redirect_uri"
-                csrf-token="csrf_token">
-            </AppHome>`;
+        return `
+                <h1>HOME</h1>
+        `;
     }
 }
 
