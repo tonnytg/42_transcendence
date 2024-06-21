@@ -8,7 +8,8 @@ export class Home extends AbstractView {
 
     async getHtml() {
         return `
-                <h1>HOME</h1>
+        <link rel="stylesheet" href="/static/css/style.css">
+        <app-card-login></app-card-login>
         `;
     }
 }

@@ -1,0 +1,132 @@
+{% if user.is_authenticated %}
+<div class="d-flex justify-content-between align-items-center">
+    <!-- alert logado -->
+    <div class="d-flex align-items-center">
+
+        <span class="fw-bold text-white">Tá dentro,&nbsp;&nbsp;{{ user.username }}!</span>
+</div>
+{% else %}
+<!--
+To do:
+criar logica de ocultar divs e mostrar divs de acordo com o estado do usuário"
+-->
+<div id="card-login">
+    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
+        <div class="card blur-div col-2-md w-100">
+            <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
+                <div class="card-body justify-content-center align-items-center">
+                    <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
+                    <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <label for="email">Digite seu e-mail</label>
+                            <input type="email" class="form-control border-light text-light" style="background-color: transparent;" id="email" name="email" required>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label for="password">Digite sua senha</label>
+                            <input type="password" class="form-control border-light text-light" style="background-color: transparent;" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
+                                Entrar</button>
+
+                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
+            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="card" style="background-color: transparent;">
+                    <div class="card-body text-center">
+                        <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
+                                cadastre-se aqui!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="card-mfa">
+    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
+        <div class="card blur-div col-2-md w-100">
+            <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
+                <div class="card-body justify-content-center align-items-center">
+                    <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
+                    <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <label for="email">Digite seu e-mail</label>
+                            <input type="email" class="form-control border-light text-light" style="background-color: transparent;" id="email" name="email" required>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label for="password">Digite sua senha</label>
+                            <input type="password" class="form-control border-light text-light" style="background-color: transparent;" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
+                                Entrar</button>
+
+                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
+            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="card" style="background-color: transparent;">
+                    <div class="card-body text-center">
+                        <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
+                                cadastre-se aqui!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="register">
+    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
+        <div class="card blur-div col-2-md w-100">
+            <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
+                <div class="card-body justify-content-center align-items-center">
+                    <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
+                    <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <label for="email">Digite seu e-mail</label>
+                            <input type="email" class="form-control border-light text-light" style="background-color: transparent;" id="email" name="email" required>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label for="password">Digite sua senha</label>
+                            <input type="password" class="form-control border-light text-light" style="background-color: transparent;" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
+                                Entrar</button>
+
+                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
+            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="card" style="background-color: transparent;">
+                    <div class="card-body text-center">
+                        <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
+                                cadastre-se aqui!</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
