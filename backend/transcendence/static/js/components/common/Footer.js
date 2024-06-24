@@ -22,25 +22,10 @@ class Footer extends HTMLElement {
             <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
             <style>
                 footer {
-                    position: absolute;
+                    position: realtive;
                     bottom: 0;
-                    width: 100%;
+                    width: 100vw;
                     padding: 10px 0;
-                }
-                .theme-icon {
-                    display: none;
-                }
-                body.dark-mode .icon-dark {
-                    display: inline;
-                }
-                body.dark-mode .icon-light {
-                    display: none;
-                }
-                body.light-mode .icon-dark {
-                    display: none;
-                }
-                body.light-mode .icon-light {
-                    display: inline;
                 }
             </style>
             <footer class="mt-auto text-white-50">

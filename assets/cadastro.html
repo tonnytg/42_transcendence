@@ -1,0 +1,47 @@
+<script src="register.js"></script>
+<div id="card-login">
+    <div class="container d-flex flex-column justify-content-center vh-100">
+        <div class="card blur-div col-12-md w-100">
+			<div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
+				<div class="card-body justify-content-center align-items-center">
+
+					<form id="signupForm">
+						<div class="input-group">
+							<label for="email" class="form-label awaiting" id="email-label">Informe seu melhor
+								e-mail*</label>
+							<input type="email" class="form-control" id="email" name="email" required>
+							<div class="invalid-feedback">Por favor, insira seu melhor email.</div>
+						</div>
+						<div class="input-group hidden" id="password-container">
+							<label for="password" class="form-label awaiting" id="password-label">Crie uma
+								senha*</label>
+							<input type="password" class="form-control" id="password" name="password" required>
+							<span class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></span>
+							<div class="invalid-feedback">A senha deve ter ao menos 8 caracteres alfanuméricos não
+								sequenciais, sem espaços ou caracteres especiais.</div>
+						</div>
+						<div class="input-group hidden" id="username-container">
+							<label for="username" class="form-label awaiting" id="username-label">Crie um
+								apelido*</label>
+							<input type="text" class="form-control" id="username" name="username" required>
+							<div class="invalid-feedback">O apelido deve ter ao menos 8 caracteres alfanuméricos não
+								sequenciais, sem espaços ou caracteres especiais.</div>
+						</div>
+						<div class="form-check mb-4 hidden" id="email-preferences-container">
+
+						</div>
+						<button type="submit" class="btn btn-primary w-100 hidden" id="submit-btn">Continue</button>
+					</form>
+
+				</div>
+				<div class="row justify-content-center">
+					<div class="card" style="background-color: transparent;">
+							<p class="text-muted mt-3">Ao criar uma conta, você concorda com os <a href="#">Termos de
+									Serviço</a>. Ocasionalmente, enviaremos e-mails
+								relacionados à conta.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

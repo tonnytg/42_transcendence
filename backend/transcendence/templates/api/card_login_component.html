@@ -1,18 +1,288 @@
-{% if user.is_authenticated %}
-<div class="d-flex justify-content-between align-items-center">
-    <!-- alert logado -->
-    <div class="d-flex align-items-center">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../static/css/style.css">
+<script src='https://kit.fontawesome.com/a076d05399.js'crossorigin='anonymous'></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+.card-title {
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: #58f1ff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
 
-        <span class="fw-bold text-white">Tá dentro,&nbsp;&nbsp;{{ user.username }}!</span>
+.form-label {
+    color: #58a6ff;
+    display: block;
+    margin-bottom: 45px;
+}
+.form-control {
+    background-color: transparent;
+    color: #c9d1d9;
+    border: 1px solid #ffffff;
+    border-radius: 0;
+
+}
+.form-control:focus {
+    background-color: transparent;
+    border-color: #58f1ff;
+    box-shadow: none;
+}
+.btn-primary {
+    background-color: #238636;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #2ea043;
+}
+
+.input-group {
+    position: relative;
+    color: aliceblue;
+    /* border: 2px solid #c9d1d9; */
+}
+.input-group .form-control {
+    padding-left: 30px;
+    left: 45px;
+}
+.input-group .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+
+/* menu lateral */
+.vertical-menu {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(19, 20, 22, 0.3);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .vertical-menu .menu-item {
+            margin: 10px 0;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.3s;
+            position: relative;
+        }
+        .vertical-menu .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .vertical-menu .menu-item i {
+            font-size: 24px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .tooltip-custom {
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(19, 20, 22, 0.3);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: none;
+            white-space: nowrap;
+        }
+        .menu-item:hover .tooltip-custom {
+            display: block;
+        }
+        .bottom-menu {
+            position: fixed;
+            top: 50%;
+            left: 100px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 1000;
+        }
+        .bottom-menu .menu-item {
+            margin: 10px 0;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        .bottom-menu .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .bottom-menu .menu-item i {
+            font-size: 24px;
+            color: #fff;
+        }
+        .bottom-menu .menu-item span {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #fff;
+        }
+        .content {
+            margin-left: 150px;
+            margin-right: 5px;
+        }
+        @media (max-width: 768px) {
+            .vertical-menu {
+                top: 320px !important;
+                position: static;
+                margin: 10px auto;
+                padding-top: 15px;
+                flex-direction: row;
+                justify-content: space-around;
+                background-color: transparent;
+            }
+            /* .bottom-menu {
+                top: 80px;
+                position: static;
+                margin: 10px auto;
+                padding-top: 15px;
+                flex-direction: row;
+                justify-content: space-around;
+                background-color: transparent;
+            } */
+            .content {
+                margin: 20px;
+            }
+            .tooltip-custom {
+                left: 10px;
+                top: 60px;
+                transform: translateY(0);
+            }
+            .xp {
+                /* display: none; */
+                font-family: "Silkscreen", sans-serif;
+                font-weight: 700;
+                font-size: 2rem;
+                color: #58f1ff;
+            }
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .line {
+            flex: 1;
+            border-bottom: 1px solid #fff;
+        }
+</style>
+
+{% if user.is_authenticated %}
+<div class="vertical-menu">
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Jogar">
+        <i class="fas fa-gamepad"></i>
+        <span class="tooltip-custom">Jogar</span>
+    </a>
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Ranking">
+        <i class="fas fa-award"></i>
+        <span class="tooltip-custom">Ranking</span>
+    </a>
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Chat">
+        <i class="fas fa-comments"></i>
+        <span class="tooltip-custom">Chat</span>
+    </a>
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Perfil">
+        <i class="fas fa-user"></i>
+        <span class="tooltip-custom">Perfil</span>
+    </a>
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Dashboard">
+        <i class="fas fa-dashboard"></i>
+        <span class="tooltip-custom">Dashboard</span>
+    </a>
+</div>
+
+<!--
+TODO: Implementar o XP Game, ficará na parte inferior
+da tela logo abaixo do menu lateral.
+-->
+<!-- <div class="bottom-menu">
+    <a href="#" class="menu-item" data-bs-toggle="tooltip" title="Score">
+        <i class="fas fa-star"></i>
+        <span>XP Game</span>
+        <span  class="xp">999</span>
+    </a>
+</div> -->
+
+<div class="content container-fluid">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="card blur-div col-12 col-md-10 col-lg-8">
+            <div class="row border-light border-rounded text-light justify-content-center m-5">
+                <div class="card-body text-center" style="overflow: auto;">
+                    <h4>Sub título</h4>
+                    <h1>Título</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minus quibusdam vel provident exercitationem, cupiditate neque consectetur sed mollitia odio consequatur minima, quae dignissimos! Eius dicta eos dolores incidunt quo?
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores eos molestiae cumque fuga doloribus soluta ad repudiandae itaque totam consectetur, voluptas, quis corrupti nemo repellendus voluptates quod, laborum sit voluptatem
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% else %}
-<!--
-To do:
-criar logica de ocultar divs e mostrar divs de acordo com o estado do usuário"
--->
+
 <div id="card-login">
-    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
-        <div class="card blur-div col-2-md w-100">
+    <div class="container d-flex flex-column justify-content-center vh-100">
+        <div class="card blur-div col-12-md w-100">
             <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
                 <div class="card-body justify-content-center align-items-center">
                     <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
@@ -28,19 +298,24 @@ criar logica de ocultar divs e mostrar divs de acordo com o estado do usuário"
                         </div>
 
                         <div class="mb-4">
-                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
-                                Entrar</button>
-
-                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
-            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
-
+                            <button type="submit" class="btn btn-light btn-block">
+                                <i class="fas fa-sign-in-alt" alt="Entrar"></i> Entrar
+                            </button>
+                            <div class="divider">
+                                <span clas="line"></span>
+                                <span class="divider-text">ou</span>
+                                <span clas="line"></span>
+                            </div>
+                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"class="btn btn-light btn-block">
+                                <i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="row justify-content-center">
                 <div class="card" style="background-color: transparent;">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center text-light">
                         <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
                                 cadastre-se aqui!</a></p>
                     </div>
@@ -50,83 +325,55 @@ criar logica de ocultar divs e mostrar divs de acordo com o estado do usuário"
     </div>
 </div>
 
-<div id="card-mfa">
-    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
-        <div class="card blur-div col-2-md w-100">
-            <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
-                <div class="card-body justify-content-center align-items-center">
-                    <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
-                    <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
-                    <form>
-                        <div class="form-floating mb-3">
-                            <label for="email">Digite seu e-mail</label>
-                            <input type="email" class="form-control border-light text-light" style="background-color: transparent;" id="email" name="email" required>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <label for="password">Digite sua senha</label>
-                            <input type="password" class="form-control border-light text-light" style="background-color: transparent;" id="password" name="password" required>
-                        </div>
+<div id="card-cadastro">
+    <div class="container d-flex flex-column justify-content-center vh-100">
+        <div class="card blur-div col-12-md w-100">
+			<div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
+				<div class="card-body justify-content-center align-items-center">
 
-                        <div class="mb-4">
-                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
-                                Entrar</button>
+					<form id="signupForm">
+						<div class="input-group">
+							<label for="email" class="form-label awaiting" id="email-label">Informe seu melhor
+								e-mail*</label>
+							<input type="email" class="form-control" id="email" name="email" required>
+							<div class="invalid-feedback">Por favor, insira seu melhor email.</div>
+						</div>
+						<div class="input-group hidden" id="password-container">
+							<label for="password" class="form-label awaiting" id="password-label">Crie uma
+								senha*</label>
+							<input type="password" class="form-control" id="password" name="password" required>
+							<span class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></span>
+							<div class="invalid-feedback">A senha deve ter ao menos 8 caracteres alfanuméricos não
+								sequenciais, sem espaços ou caracteres especiais.</div>
+						</div>
+						<div class="input-group hidden" id="username-container">
+							<label for="username" class="form-label awaiting" id="username-label">Crie um
+								apelido*</label>
+							<input type="text" class="form-control" id="username" name="username" required>
+							<div class="invalid-feedback">O apelido deve ter ao menos 8 caracteres alfanuméricos não
+								sequenciais, sem espaços ou caracteres especiais.</div>
+						</div>
+						<div class="form-check mb-4 hidden" id="email-preferences-container">
 
-                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
-            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
+						</div>
+						<button type="submit" class="btn btn-primary w-100 hidden" id="submit-btn">Continue</button>
+					</form>
 
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="card" style="background-color: transparent;">
-                    <div class="card-body text-center">
-                        <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
-                                cadastre-se aqui!</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="card" style="background-color: transparent;">
+							<p class="text-muted mt-3">Ao criar uma conta, você concorda com os <a href="#">Termos de
+									Serviço</a>. Ocasionalmente, enviaremos e-mails
+								relacionados à conta.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div id="register">
-    <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
-        <div class="card blur-div col-2-md w-100">
-            <div class="row border-light border-rounded text-light justify-content-center m-5 w-50 mx-auto">
-                <div class="card-body justify-content-center align-items-center">
-                    <img class="mx-auto d-block" src="../../static/images/logo-m.png" alt="">
-                    <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
-                    <form>
-                        <div class="form-floating mb-3">
-                            <label for="email">Digite seu e-mail</label>
-                            <input type="email" class="form-control border-light text-light" style="background-color: transparent;" id="email" name="email" required>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <label for="password">Digite sua senha</label>
-                            <input type="password" class="form-control border-light text-light" style="background-color: transparent;" id="password" name="password" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-sign-in-alt" alt="Entrar"></i>
-                                Entrar</button>
-
-                            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
-            class="btn btn-light btn-block"><i class="fa fa-duotone fa-rocket" alt="Login com a 42"></i> Login 42</a>
-
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="card" style="background-color: transparent;">
-                    <div class="card-body text-center">
-                        <p>Não possui cadastro ainda? <a href="cadastro.html" class="text-warning">Junte-se a nós e
-                                cadastre-se aqui!</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endif %}
+<app-footer></app-footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
