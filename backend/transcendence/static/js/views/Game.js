@@ -8,7 +8,7 @@ export class Game extends AbstractView {
 
     async getHtml() {
         return `
-            <h1>Game</h1>
+            <pong-game> </pong-game>
         `;
     }
 }
