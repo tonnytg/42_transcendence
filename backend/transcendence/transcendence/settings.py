@@ -29,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 # Login URL
@@ -59,6 +58,10 @@ LOGIN_URL = 'login'
 CLIENT_ID_42 = os.environ.get('APP_AUTH_CLIENT_ID')
 CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
 REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
+
+# Configuration for JWT
+SECRET_KEY_JWT = 'XZofzeCoM-JjFfHGmPMxj-8ntGm6ThE2gUcASy_yLTQ='
+
 
 ROOT_URLCONF = 'transcendence.urls'
 

@@ -1,10 +1,18 @@
+import random
+import string
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.conf import settings
-import requests
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.utils import timezone
+from .models import MFA
+import requests
+import jwt
+from datetime import datetime, timedelta
+
 
 # Data
 users = [
@@ -95,16 +103,51 @@ def oauth_callback(request):
 
 # Local authentication
 def login_view(request):
+    # Mock user
+    mock_username = "gialexan"
+    mock_email = "alexromani.sc@gmail.com"
+    mock_password = "admin"
+
+    # Create mock user
+    user, created = User.objects.get_or_create(username=mock_username, email=mock_email)
+    if created:
+        user.set_password(mock_password)
+        user.save()
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect('homepage')
+            # Generate MFA code
+            characters = string.ascii_uppercase + string.digits
+            mfa_code = "".join(random.choices(characters, k=5))
+
+            # Save MFA code in the database
+            created = MFA.create_mfa(user=user, mfa_code=mfa_code)
+            if created:
+                # Gabiarra para mostrar o campo de MFA na tela
+                request.session['show_mfa'] = True
+
+                # Save user in the session
+                request.session['id'] = user.id
+                request.session['name'] =  user.username
+
+                # Send MFA code by email
+                send_mail(
+                    'Código de MFA',
+                    f'Seu código de MFA é: {mfa_code}',
+                    settings.EMAIL_HOST_USER,
+                    ["alexromani.sc@gmail.com"],
+                    fail_silently=False,
+                )
+                return redirect('homepage')
+            else:
+                messages.error(request, 'Erro ao gerar código MFA')
+                return redirect('login')
         else:
-            messages.error(request, 'Invalid username or password')
-            return redirect('homepage')
+            messages.error(request, 'Nome de usuário ou senha inválidos')
+            return redirect('login')
     else:
         return redirect('homepage')
 
@@ -129,3 +172,46 @@ def section(request, num):
         return HttpResponse(texts[num-1])
     else:
         return HttpResponse("Invalid section number")
+
+def mfa_view(request):
+    if 'show_mfa' in request.session:
+        del request.session['show_mfa']
+    if request.method == 'POST':
+        mfa_code = request.POST.get('mfa_code')
+        
+        # Get the client ID
+        client_id = request.session.get('id')
+        # Get the latest MFA code
+        mfa = MFA.get_latest_mfa(client_id)
+        if mfa.consumed:
+            messages.error(request, 'Código MFA já utilizado')
+            return redirect('homepage')
+
+        if mfa.expires_at < timezone.now():
+            messages.error(request, 'Código MFA expirado')
+            return redirect('homepage')
+
+        if mfa.code != mfa_code:
+            messages.error(request, 'Código MFA incorreto')
+            return redirect('homepage')
+        
+        # Mark MFA as consumed
+        mfa.mark_as_consumed()
+
+        # Generate JWT token
+        payload = {
+            'id': request.user.id,
+            'username': request.user.username,
+            'exp':  datetime.now() + timedelta(hours=1)
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY_JWT, algorithm='HS256')
+
+        # Save JWT token in the session
+        request.session['jwt_token'] = token
+
+        user = User.objects.get(id=client_id)
+        login(request, user)
+        
+        return redirect('homepage')
+    else:
+        return render(request, "homepage")

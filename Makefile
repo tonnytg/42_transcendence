@@ -3,5 +3,6 @@ all:
 
 down:
 	docker-compose down
-	docker volume rm 42_transcendence_backend_data
-	docker volume rm 42_transcendence_postgres_data
+
+clean:
+	docker-compose down --rmi local --volumes
