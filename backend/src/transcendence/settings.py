@@ -57,7 +57,6 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # Login URL
@@ -143,19 +142,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-# Load css
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-# Where to store static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
-
-# Base url to serve media files
-MEDIA_URL = '/media/'
-
-# Diretório onde os arquivos de mídia serão salvos
-MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

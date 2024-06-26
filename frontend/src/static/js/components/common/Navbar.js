@@ -15,10 +15,7 @@ template.innerHTML = `
     <nav class="nav nav-masthead">
         <a data-link class="nav-link active" aria-current="page" href="/">Home</a>
         <a data-link class="nav-link" href="/game">Game</a>
-        <a data-link class="nav-link" href="/invite">Friends</a>
-        <a data-link class="nav-link" href="/chat">Chat</a>
-        <a data-link class="nav-link" href="/dashboard">Dashboard</a>
-        <a data-link class="nav-link" href="#">Profile</a>
+        <a data-link class="nav-link" href="/profile">Profile</a>
     </nav>
 `;
 

@@ -1,9 +1,17 @@
 services:
+  nginx:
+    image: nginx:1.27.0-alpine
+    container_name: nginx_svr
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/src:/usr/share/nginx/html:ro
+      - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
   backend:
     build: ./backend
     volumes:
-      - backend_data:/app
-    env_file: .env
+      - backend_d:/app
     environment:
       - APP_AUTH_CLIENT_ID
       - APP_AUTH_CLIENT_SECRET
@@ -20,10 +28,9 @@ services:
         condition: service_healthy
 
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file: .env
+      - postgres_d:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB
       - POSTGRES_USER
@@ -37,5 +44,5 @@ services:
       - "5432:5432"
 
 volumes:
-  postgres_data:
-  backend_data:
+  postgres_d:
+  backend_d:
