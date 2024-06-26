@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -58,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # Login URL
@@ -67,6 +67,10 @@ LOGIN_URL = 'login'
 CLIENT_ID_42 = os.environ.get('APP_AUTH_CLIENT_ID')
 CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
 REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
+
+# Configuration for JWT
+SECRET_KEY_JWT = 'XZofzeCoM-JjFfHGmPMxj-8ntGm6ThE2gUcASy_yLTQ='
+
 
 ROOT_URLCONF = 'transcendence.urls'
 
