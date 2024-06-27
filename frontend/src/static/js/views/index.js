@@ -22,4 +22,8 @@ import {
     Invite
 } from './Invite.js';
 
-export { Home, Profile, Dashboard, Game, Chat, Invite };
+import {
+    Login
+} from './Login.js';
+
+export { Home, Login, Profile, Dashboard, Game, Chat, Invite };

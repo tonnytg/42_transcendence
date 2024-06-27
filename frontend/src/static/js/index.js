@@ -1,5 +1,5 @@
 import { Router } from "./Router.js";
-import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
+import { Home, Login, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
 import { ApiClient } from "./services/index.js";
 
 const apiClient = new ApiClient('http://localhost:8000/api');
@@ -10,6 +10,7 @@ import "./components/index.js";
 // Route definitions
 const routes = [
     { path: "/", view: Home },
+    { path: "/login-oauth", view: Login },
     { path: "/game", view: Game }, // chat, game, invite,
     { path: "/profile", view: Profile },//  dashboard, profile
     { path: "/dashboard", view: Dashboard }, //

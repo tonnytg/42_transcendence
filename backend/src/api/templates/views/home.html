@@ -1,5 +1,8 @@
 {% if user.is_authenticated %}
+<!-- TODO: Entregar isso se estiver logado -->
+<p>Olá {{ user.username }}</p>
 <app-home></app-home>
 {% else %}
+<!-- TODO: Entregar isso se não estiver logado -->
 <app-login></app-login>
 {% endif %}
