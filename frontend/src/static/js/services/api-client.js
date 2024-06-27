@@ -16,3 +16,6 @@ export class ApiClient {
         }
     }
 }
+
+// const apiClient = new ApiClient('http://localhost:8000/api');
+// export default apiClient;

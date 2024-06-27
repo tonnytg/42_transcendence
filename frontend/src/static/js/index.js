@@ -1,6 +1,10 @@
 import { Router } from "./Router.js";
 import { Home, Game, Profile, Dashboard, Chat, Invite } from "./views/index.js";
-// import { ApiClient } from "./services/index.js";
+import { ApiClient } from "./services/index.js";
+
+const apiClient = new ApiClient('http://localhost:8000/api');
+document.apiClient = apiClient;
+
 import "./components/index.js";
 
 // Route definitions
@@ -15,9 +19,6 @@ const routes = [
 
 const app = document.querySelector("#app");
 const router = new Router(routes);
-
-// const apiClient = new ApiClient('http://localhost:8000/api');
-// document.apiClient = apiClient;
 
 window.router = router;
 router.init(app);

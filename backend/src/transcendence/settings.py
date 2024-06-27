@@ -59,9 +59,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
 ]
 
-# Login URL
-LOGIN_URL = 'login'
-
 # Configuration for 42 OAuth
 CLIENT_ID_42 = os.environ.get('APP_AUTH_CLIENT_ID')
 CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
@@ -70,6 +67,8 @@ REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
 # Configuration for JWT
 SECRET_KEY_JWT = 'XZofzeCoM-JjFfHGmPMxj-8ntGm6ThE2gUcASy_yLTQ='
 
+# External Routes (to redirect)
+HOMEPAGE_URL = 'http://localhost'
 
 ROOT_URLCONF = 'transcendence.urls'
 

@@ -7,10 +7,8 @@ export class Home extends AbstractView {
     }
 
     async getHtml() {
-        // const response = await fetch('http://localhost:8000/api/home-view/');
-        // const html = await response.text();
-        // return html;
-        return `<h1>HOME</h1>`;
+        const api = document.apiClient;
+        const html = await api.fetch('home-view/');
+        return html;
     }
 }
-

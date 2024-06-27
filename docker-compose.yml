@@ -11,7 +11,7 @@ services:
   backend:
     build: ./backend
     volumes:
-      - backend_d:/app
+      - backend_data:/app
     environment:
       - APP_AUTH_CLIENT_ID
       - APP_AUTH_CLIENT_SECRET
@@ -21,6 +21,8 @@ services:
       - APP_DB_NAME
       - APP_DB_USER
       - APP_DB_PASSWORD
+      - APP_SECRET_KEY
+      - DJANGO_SETTINGS_MODULE=transcendence.settings
     ports:
       - "8000:8000"
     depends_on:
@@ -30,7 +32,7 @@ services:
   db:
     image: postgres:16-alpine
     volumes:
-      - postgres_d:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB
       - POSTGRES_USER
@@ -44,5 +46,5 @@ services:
       - "5432:5432"
 
 volumes:
-  postgres_d:
-  backend_d:
+  postgres_data:
+  backend_data:

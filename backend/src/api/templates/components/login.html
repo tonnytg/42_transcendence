@@ -1,0 +1,110 @@
+<div class="container">
+    <header
+        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none" data-link>
+                <img src="/static/images/pong.svg" alt="" class="logo">
+            </a>
+        </div>
+
+        {% if user.is_authenticated and not request.session.mfa_code %}
+        <div id="menu">
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="/" class="nav-link px-2 link-secondary" data-link>Home</a></li>
+                <li><a href="/game" class="nav-link px-2" data-link>Game</a></li>
+                <li><a href="/profile" class="nav-link px-2" data-link>Profile</a></li>
+                <li><a href="/dashboard" class="nav-link px-2" data-link>Dashboard</a></li>
+                <li><a href="/chat" class="nav-link px-2" data-link>Chat</a></li>
+                <li><a href="/invite" class="nav-link px-2" data-link>Invite Friends</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3 text-end">
+
+            <form method="post" action="http://localhost:8000{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+        {% elif request.session.show_mfa %}
+        <div class="col-md-3 text-end">
+            <form method="post" action="http://localhost:8000{% url 'mfa' %}">
+                <!-- Input text -->
+                <div class="form-group
+                    {% if form.mfa_code.errors %}has-error{% endif %}">
+                    <label for="mfa_code">MFA Code:</label>
+                    <input type="text" class="form-control" id="mfa_code" name="mfa_code"
+                        value="{{ form.mfa_code.value }}">
+                    {% for error in form.mfa_code.errors %}
+                    <span class="help-block
+                        {% if forloop.first %}text-danger{% endif %}">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="col-md-3 text-end">
+            <a href="https://api.intra.42.fr/oauth/authorize?client_id={{ CLIENT_ID_42 }}&redirect_uri={{ REDIRECT_URI_42 }}&response_type=code"
+                class="btn btn-primary">Login 42 Fdp</a>
+        </div>
+        <form method="post" action="http://localhost:8000{% url 'login' %}">
+            <!-- Input text -->
+            <div class="form-group
+                {% if form.username.errors %}has-error{% endif %}">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ form.username.value }}">
+                {% for error in form.username.errors %}
+                <span class="help-block
+                    {% if forloop.first %}text-danger{% endif %}">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <!-- Input password -->
+            <div class="form-group
+                {% if form.password.errors %}has-error{% endif %}">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password">
+                {% for error in form.password.errors %}
+                <span class="help-block
+                    {% if forloop.first %}text-danger{% endif %}">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Login</button>
+            {% endif %}
+    </header>
+</div>
+
+<!-- <div class="login-container"> -->
+<!--     <form id="loginForm" class="login-form"> -->
+<!--         <div class="form-outline mb-4"> -->
+<!--             <input type="email" id="form2Example1" class="form-control" required /> -->
+<!--             <label class="form-label" for="form2Example1">Email address</label> -->
+<!--         </div> -->
+<!---->
+<!--         <div class="form-outline mb-4"> -->
+<!--             <input type="password" id="form2Example2" class="form-control" required /> -->
+<!--             <label class="form-label" for="form2Example2">Password</label> -->
+<!--         </div> -->
+<!---->
+<!--         <div class="row mb-4"> -->
+<!--             <div class="col d-flex justify-content-center"> -->
+<!--                 <div class="form-check"> -->
+<!--                     <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked /> -->
+<!--                     <label class="form-check-label" for="form2Example31"> Remember me </label> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!---->
+<!--             <div class="col"> -->
+<!--                 <a href="#!">Forgot password?</a> -->
+<!--             </div> -->
+<!--         </div> -->
+<!---->
+<!--         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button> -->
+<!---->
+<!--         <div class="text-center"> -->
+<!--             <p>Not a member? <a href="#!">Register</a></p> -->
+<!--         </div> -->
+<!--     </form> -->
+<!-- </div> -->

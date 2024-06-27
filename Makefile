@@ -5,7 +5,7 @@ down:
 	docker-compose down
 
 clean:
-	docker-compose down --rmi local --volumes
+	docker-compose down --rmi local --volumes --remove-orphans
 
 fclean: clean
 	docker system prune --all --force

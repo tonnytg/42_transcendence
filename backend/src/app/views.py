@@ -48,12 +48,6 @@ users = [
     },
 ]
 
-texts = [
-    'This is the first section',
-    'This is the second section',
-    'This is the third section',
-]
-
 
 # Remote authentication
 def oauth_callback(request):
@@ -76,7 +70,7 @@ def oauth_callback(request):
             )
             if user_info_response.status_code == 200:
                 user_info = user_info_response.json()
-                user_id = user_info['id']
+                # user_id = user_info['id']
                 username = user_info['login']
                 email = user_info['email']
                 first_name = user_info['first_name']
@@ -101,11 +95,11 @@ def oauth_callback(request):
 
                 return redirect('homepage')
             else:
-                return HttpResponse('Erro ao obter informações do usuário')
+                return HttpResponse(b'Erro ao obter informacoes do usuario')
         else:
-            return HttpResponse('Erro ao obter token de acesso')
+            return HttpResponse(b'Erro ao obter token de acesso')
     else:
-        return HttpResponse('Código de autorização não fornecido')
+        return HttpResponse(b'Codigo de autorizacao nao fornecido')
 
 
 # Local authentication
@@ -157,6 +151,7 @@ def login_view(request):
             return redirect('login')
     else:
         return redirect('homepage')
+        # return redirect(settings.HOMEPAGE_URL)
 
 
 def logout_view(request):
@@ -165,24 +160,8 @@ def logout_view(request):
 
 
 # Pages
-def index(request):
-    context = {
-        'datas': users,
-        'CLIENT_ID_42': settings.CLIENT_ID_42,
-        'REDIRECT_URI_42': settings.REDIRECT_URI_42,
-    }
-    return render(request, 'index.html', context)
-
-
-def game(request):
-    return render(request, 'game.html')
-
-
-def section(request, num):
-    if 1 <= num <= 3:
-        return HttpResponse(texts[num - 1])
-    else:
-        return HttpResponse('Invalid section number')
+def index(_):
+    return redirect(settings.HOMEPAGE_URL)
 
 
 def mfa_view(request):

@@ -22,35 +22,19 @@ class Router {
         window.history.replaceState({}, '', path);
         await this.handleRouting();
     }
+
     findRoute(path) {
         const potentialMatches = this.routes.map(route => ({
             route: route,
             isMatch: path === route.path
         }));
 
-        // Verifica se há correspondência de rota
-        let match = potentialMatches.find(potentialMatch => potentialMatch.isMatch);
-
-        // Se nenhuma rota corresponder, redireciona para a rota Home
-        if (!match) {
-            match = { route: this.routes.find(route => route.path === '/'), isMatch: true };
-        }
+        let match = potentialMatches.find(potentialMatch => potentialMatch.isMatch)
+            || { route: this.routes[0], isMatch: true };
 
         return match.route;
     }
 
-    // findRoute(path) {
-    //     const potentialMatches = this.routes.map(route => ({
-    //         route: route,
-    //         isMatch: path === route.path
-    //     }));
-    //
-    //     let match = potentialMatches.find(potentialMatch => potentialMatch.isMatch)
-    //         || { route: this.routes[0], isMatch: true };
-    //
-    //     return match.route;
-    // }
-    //
     async handleRouting() {
         const path = window.location.pathname;
         const match = this.findRoute(path);
