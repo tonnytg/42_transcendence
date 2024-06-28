@@ -1,3 +1,3 @@
-import { Home } from './home/Home.js';
+import { Home } from './private/home/Home.js';
 
 export { Home };

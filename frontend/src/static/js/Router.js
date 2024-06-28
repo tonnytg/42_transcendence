@@ -1,6 +1,6 @@
-import Home from './views/home/Home.js';
-import About from './views/about/About.js';
-import Dashboard from './views/dashboard/Dashboard.js';
+import Home from './views/public/home/Home.js';
+import About from './views/public/about/About.js';
+import Dashboard from './views/private/dashboard/Dashboard.js';
 
 export function Router() {
     const root = document.getElementById('root');
