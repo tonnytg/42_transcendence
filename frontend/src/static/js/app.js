@@ -1,12 +1,15 @@
-import { Router } from "./router.js";
-import { Home } from "./views/home/Home.js";
+import { Router } from './router.js';
+import { handleCallback } from './callbackHandler.js';
 
-const routes = [
-    { path: "/", view: Home },
-];
-
-const app = document.querySelector("#app");
-const router = new Router(routes);
-
-window.router = router;
-router.init(app);
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('root');
+    if (root) {
+        const path = window.location.pathname;
+        if (path.startsWith('/callback')) {
+            handleCallback();
+        } else {
+            Router();
+            window.addEventListener('popstate', Router);
+        }
+    }
+});

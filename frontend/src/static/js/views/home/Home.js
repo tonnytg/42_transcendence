@@ -1,48 +1,39 @@
-class Home extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = `
-            <style>
-                @import './Home.css';
-            </style>
-            <h1> Home </h1>
-            <div class="home-page">
-                <h1>Home Page</h1>
-                <form id="home-form">
-                    <input type="text" id="input-field" placeholder="Type something...">
-                    <button type="submit">Submit</button>
-                </form>
-                <p id="response-message"></p>
-            </div>
-        `;
+import { navigateTo } from '../../router.js';
 
-        this.handleGetInfoFromBackend = this.handleGetInfoFromBackend.bind(this);
-    }
+export default function Home() {
+    const element = document.createElement('div');
+    element.innerHTML = `
+        <style>
+            .home {
+                font-family: Arial, sans-serif;
+            }
+            .button {
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 10px;
+            }
+        </style>
+        <div class="home">
+            <h1>Home Page</h1>
+            <button id="aboutButton" class="button">Go to About Page</button>
+            <button id="loginButton" class="button">Login with 42</button>
+        </div>
+    `;
 
-    connectedCallback() {
-        this.shadowRoot.querySelector('#home-form').addEventListener('submit', this.handleGetInfoFromBackend);
-    }
+    element.querySelector('#aboutButton').addEventListener('click', () => {
+        navigateTo('/about');
+    });
 
-    disconnectedCallback() {
-        this.shadowRoot.querySelector('#home-form').removeEventListener('submit', this.handleGetInfoFromBackend);
-    }
+    const handleButtonLogin = () => {
+        const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-949c9204ce2bacc41d9143cdcb52e5152e57d57686ef9cad4cfbe996f15a106e&redirect_uri=http%3A%2F%2Flocalhost%3A80%2Fcallback&response_type=code`;
+        window.location.href = authUrl;
+    };
 
-    handleGetInfoFromBackend(event) {
-        event.preventDefault();
-        const inputField = this.shadowRoot.querySelector('#input-field');
-        const responseMessage = this.shadowRoot.querySelector('#response-message');
-        const inputValue = inputField.value.trim();
+    element.querySelector('#loginButton').addEventListener('click', handleButtonLogin);
 
-        if (inputValue) {
-            responseMessage.textContent = `You submitted: ${inputValue}`;
-            inputField.value = '';
-        } else {
-            responseMessage.textContent = 'Please enter something.';
-        }
-    }
+    return element;
 }
-
-customElements.define('home-page', Home);
-
-export { Home };

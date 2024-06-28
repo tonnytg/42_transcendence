@@ -1,53 +1,33 @@
-// static/js/router.js
-class Router {
-    constructor(routes) {
-        this.routes = routes;
-        this._loadInitialRoute();
+import Home from './views/home/Home.js';
+import About from './views/about/About.js';
+import Dashboard from './views/dashboard/Dashboard.js';
+
+export function Router() {
+    const root = document.getElementById('root');
+    root.innerHTML = '';  // Clear the root element
+
+    const path = window.location.pathname;
+    let component;
+
+    switch (path) {
+        case '/':
+            component = Home();
+            break;
+        case '/about':
+            component = About();
+            break;
+        case '/dashboard':
+            component = Dashboard();
+            break;
+        default:
+            component = document.createElement('div');
+            component.textContent = 'Page not found';
     }
 
-    loadRoute(...urlSegments) {
-        const matchedRoute = this._matchUrlToRoute(urlSegments);
-
-        if (!matchedRoute) {
-            console.error('No route matched:', urlSegments);
-            return;
-        }
-
-        const url = `/${urlSegments.join('/')}`;
-        history.pushState({}, '', url);
-
-        const routerOutlet = document.querySelector('#app');
-        routerOutlet.innerHTML = '';
-
-        const view = new matchedRoute.view();
-        routerOutlet.appendChild(view);
-    }
-
-    init(app) {
-        this.app = app;
-        window.addEventListener('popstate', () => {
-            this.loadRoute(...location.pathname.split('/').filter(part => part));
-        });
-
-        this._loadInitialRoute();
-    }
-
-    _matchUrlToRoute(urlSegments) {
-        return this.routes.find(route => {
-            const routePathSegments = route.path.split('/').filter(part => part);
-            if (routePathSegments.length !== urlSegments.length) {
-                return false;
-            }
-            return routePathSegments.every((routePart, i) => routePart === urlSegments[i]);
-        });
-    }
-
-    _loadInitialRoute() {
-        const pathNameSplit = window.location.pathname.split('/');
-        const pathSegments = pathNameSplit.length > 1 ? pathNameSplit.slice(1) : [''];
-
-        this.loadRoute(...pathSegments);
-    }
+    root.appendChild(component);
 }
 
-export { Router };
+export function navigateTo(url) {
+    history.pushState(null, null, url);
+    Router();
+}
