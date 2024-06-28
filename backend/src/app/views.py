@@ -164,6 +164,7 @@ def index(_):
     return redirect(settings.HOMEPAGE_URL)
 
 
+# MFA para validar
 def mfa_view(request):
     if 'show_mfa' in request.session:
         del request.session['show_mfa']

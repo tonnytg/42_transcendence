@@ -1,0 +1,14 @@
+.home-page {
+    font-family: Arial, sans-serif;
+}
+
+#home-form {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+#home-form input,
+#home-form button {
+    margin-bottom: 10px;
+}

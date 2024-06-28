@@ -1,67 +1,52 @@
+// static/js/router.js
 class Router {
     constructor(routes) {
         this.routes = routes;
-        this.handleRouting = this.handleRouting.bind(this);
-        this.handleNavigation = this.handleNavigation.bind(this);
+        this._loadInitialRoute();
     }
 
-    async loadInitialRoute() {
-        const path = window.location.pathname;
-        await this.navigateTo(path, false);
-    }
+    loadRoute(...urlSegments) {
+        const matchedRoute = this._matchUrlToRoute(urlSegments);
 
-    async navigateTo(path, addToHistory = true) {
-        const currentPath = window.location.pathname;
-        if (addToHistory && currentPath !== path) {
-            window.history.pushState({}, '', path);
+        if (!matchedRoute) {
+            console.error('No route matched:', urlSegments);
+            return;
         }
-        await this.handleRouting();
-    }
 
-    async redirectTo(path) {
-        window.history.replaceState({}, '', path);
-        await this.handleRouting();
-    }
+        const url = `/${urlSegments.join('/')}`;
+        history.pushState({}, '', url);
 
-    findRoute(path) {
-        const potentialMatches = this.routes.map(route => ({
-            route: route,
-            isMatch: path === route.path
-        }));
+        const routerOutlet = document.querySelector('#app');
+        routerOutlet.innerHTML = '';
 
-        let match = potentialMatches.find(potentialMatch => potentialMatch.isMatch)
-            || { route: this.routes[0], isMatch: true };
-
-        return match.route;
-    }
-
-    async handleRouting() {
-        const path = window.location.pathname;
-        const match = this.findRoute(path);
-
-        const view = new match.view();
-        this.app.innerHTML = await view.getHtml();
-    }
-
-    handleNavigation(event) {
-        if (event.target.matches("[data-link]")) {
-            event.preventDefault();
-            const href = event.target.getAttribute('href');
-            this.navigateTo(href);
-        }
-    }
-
-    addEventListeners() {
-        window.addEventListener('popstate', this.handleRouting);
-        document.body.addEventListener('click', this.handleNavigation);
+        const view = new matchedRoute.view();
+        routerOutlet.appendChild(view);
     }
 
     init(app) {
         this.app = app;
-        document.addEventListener("DOMContentLoaded", () => {
-            this.loadInitialRoute();
-            this.addEventListeners();
+        window.addEventListener('popstate', () => {
+            this.loadRoute(...location.pathname.split('/').filter(part => part));
         });
+
+        this._loadInitialRoute();
+    }
+
+    _matchUrlToRoute(urlSegments) {
+        return this.routes.find(route => {
+            const routePathSegments = route.path.split('/').filter(part => part);
+            if (routePathSegments.length !== urlSegments.length) {
+                return false;
+            }
+            return routePathSegments.every((routePart, i) => routePart === urlSegments[i]);
+        });
+    }
+
+    _loadInitialRoute() {
+        const pathNameSplit = window.location.pathname.split('/');
+        const pathSegments = pathNameSplit.length > 1 ? pathNameSplit.slice(1) : [''];
+
+        this.loadRoute(...pathSegments);
     }
 }
 
