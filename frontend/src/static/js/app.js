@@ -1,5 +1,5 @@
 import { Router } from './router.js';
-import { handleCallback } from './callbackHandler.js';
+import { handleCallback } from './services/callbackHandler.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('root');
