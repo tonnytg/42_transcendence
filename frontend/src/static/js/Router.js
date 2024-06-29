@@ -1,6 +1,7 @@
 import Home from './views/public/home/Home.js';
 import About from './views/public/about/About.js';
 import Dashboard from './views/private/dashboard/Dashboard.js';
+import Pong from './views/private/pong/Pong.js';
 
 export function Router() {
     const root = document.getElementById('root');
@@ -18,6 +19,9 @@ export function Router() {
             break;
         case '/dashboard':
             component = Dashboard();
+            break;
+        case '/pong':
+            component = Pong();
             break;
         default:
             component = document.createElement('div');
