@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from .models import MFA
 import requests
-import jwt
+# import jwt
 from datetime import datetime, timedelta
 
 
@@ -101,7 +101,6 @@ def oauth_callback(request):
     else:
         return HttpResponse(b'Codigo de autorizacao nao fornecido')
 
-
 # Local authentication
 def login_view(request):
     # Mock user
@@ -164,46 +163,46 @@ def index(_):
     return redirect(settings.HOMEPAGE_URL)
 
 
-# MFA para validar
-def mfa_view(request):
-    if 'show_mfa' in request.session:
-        del request.session['show_mfa']
-    if request.method == 'POST':
-        mfa_code = request.POST.get('mfa_code')
+# # MFA para validar
+# def mfa_view(request):
+#     if 'show_mfa' in request.session:
+#         del request.session['show_mfa']
+#     if request.method == 'POST':
+#         mfa_code = request.POST.get('mfa_code')
 
-        # Get the client ID
-        client_id = request.session.get('id')
-        # Get the latest MFA code
-        mfa = MFA.get_latest_mfa(client_id)
-        if mfa.consumed:
-            messages.error(request, 'Código MFA já utilizado')
-            return redirect('homepage')
+#         # Get the client ID
+#         client_id = request.session.get('id')
+#         # Get the latest MFA code
+#         mfa = MFA.get_latest_mfa(client_id)
+#         if mfa.consumed:
+#             messages.error(request, 'Código MFA já utilizado')
+#             return redirect('homepage')
 
-        if mfa.expires_at < timezone.now():
-            messages.error(request, 'Código MFA expirado')
-            return redirect('homepage')
+#         if mfa.expires_at < timezone.now():
+#             messages.error(request, 'Código MFA expirado')
+#             return redirect('homepage')
 
-        if mfa.code != mfa_code:
-            messages.error(request, 'Código MFA incorreto')
-            return redirect('homepage')
+#         if mfa.code != mfa_code:
+#             messages.error(request, 'Código MFA incorreto')
+#             return redirect('homepage')
 
-        # Mark MFA as consumed
-        mfa.mark_as_consumed()
+#         # Mark MFA as consumed
+#         mfa.mark_as_consumed()
 
-        # Generate JWT token
-        payload = {
-            'id': request.user.id,
-            'username': request.user.username,
-            'exp': datetime.now() + timedelta(hours=1),
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY_JWT, algorithm='HS256')
+#         # Generate JWT token
+#         payload = {
+#             'id': request.user.id,
+#             'username': request.user.username,
+#             'exp': datetime.now() + timedelta(hours=1),
+#         }
+#         token = jwt.encode(payload, settings.SECRET_KEY_JWT, algorithm='HS256')
 
-        # Save JWT token in the session
-        request.session['jwt_token'] = token
+#         # Save JWT token in the session
+#         request.session['jwt_token'] = token
 
-        user = User.objects.get(id=client_id)
-        login(request, user)
+#         user = User.objects.get(id=client_id)
+#         login(request, user)
 
-        return redirect('homepage')
-    else:
-        return render(request, 'homepage')
+#         return redirect('homepage')
+#     else:
+#         return render(request, 'homepage')
