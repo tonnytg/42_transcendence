@@ -1,9 +1,12 @@
+import '../../../../../services/components/NavigationBar.js';
+import '../../../../../services/game.js';
+
 export default function Pong() {
     const element = document.createElement('div');
     element.innerHTML = `
                             <!-- Navigation bar | Web component -->
                             <navigation-bar></navigation-bar>
-							
+
     <div class="container mt-3">
         <div class="row border border-3 boder-black p-2">
             <div class="col-12 col-md-8">
