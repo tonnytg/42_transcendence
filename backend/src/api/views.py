@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-import logging
-import json
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login
@@ -8,8 +6,12 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-import jwt
+
 from jwt import InvalidTokenError
+import jwt
+import requests
+import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -86,3 +88,59 @@ def register(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def validate_oauth_login(request):
+    try:
+        data = json.loads(request.body)
+        code = data.get('code')
+        if not code:
+            return JsonResponse({'error': 'Code not provided'}, status=400)
+
+        # Step 1: Exchange the authorization code for an access token
+        token_response = requests.post('https://api.intra.42.fr/oauth/token', data={
+            'grant_type': 'authorization_code',
+            'client_id': settings.OAUTH_CLIENT_ID,
+            'client_secret': settings.OAUTH_CLIENT_SECRET,
+            'code': code,
+            'redirect_uri': 'http://localhost:80/callback',
+        })
+        
+        if token_response.status_code != 200:
+            return JsonResponse({'error': 'Failed to get access token from OAuth provider'}, status=400)
+
+        token_data = token_response.json()
+        access_token = token_data.get('access_token')
+
+        if not access_token:
+            return JsonResponse({'error': 'No access token found in the response'}, status=400)
+
+        # Step 2: Validate the access token and get user info
+        user_response = requests.get('https://api.intra.42.fr/v2/me', headers={
+            'Authorization': f'Bearer {access_token}'
+        })
+
+        if user_response.status_code != 200:
+            return JsonResponse({'error': 'Failed to fetch user info from OAuth provider'}, status=400)
+
+        user_data = user_response.json()
+
+        # Step 3: Find or create the user in your local database
+        username = user_data['login']
+        email = user_data['email']
+
+        user, created = User.objects.get_or_create(username=username, defaults={'email': email})
+
+        if created:
+            user.set_unusable_password()  # Since we won't have a password for OAuth users
+            user.save()
+
+        # Step 4: Generate a JWT token for the user
+        token = generate_jwt_token(user)
+
+        return JsonResponse({'token': token}, status=200)
+
+    except Exception as e:
+        logger.error(f'Error in validate_oauth_login: {e}')
+        return JsonResponse({'error': str(e)}, status=500)
