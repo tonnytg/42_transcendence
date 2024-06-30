@@ -112,7 +112,9 @@ export default async function Dashboard() {
     // Verifica se o JWT é válido antes de carregar o Dashboard
     const isValidJWT = await checkJWT();
     if (!isValidJWT) {
-        return element; // Retorna o elemento vazio se o JWT não for válido
+        const invalidJWTElement = document.createElement('div');
+        invalidJWTElement.textContent = 'JWT inválido. Redirecionando para a página de login...';
+        return invalidJWTElement; // Retorna um nó válido, mas com uma mensagem
     }
 
     return element;

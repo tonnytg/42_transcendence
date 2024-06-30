@@ -1,9 +1,10 @@
 import Home from './views/public/home/Home.js';
 import About from './views/public/about/About.js';
+import Register from './views/public/register/Register.js';
 import Dashboard from './views/private/dashboard/Dashboard.js';
 import Pong from './views/private/pong/Pong.js';
 
-export function Router() {
+export async function Router() {
     const root = document.getElementById('root');
     root.innerHTML = '';  // Clear the root element
 
@@ -14,11 +15,14 @@ export function Router() {
         case '/':
             component = Home();
             break;
+        case '/register':
+            component = Register();
+            break;
         case '/about':
             component = About();
             break;
         case '/dashboard':
-            component = Dashboard();
+            component = await Dashboard(); // Await the async function
             break;
         case '/pong':
             component = Pong();
