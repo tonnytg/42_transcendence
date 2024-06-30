@@ -1,121 +1,105 @@
-import { checkJWT } from '/static/js/services/checkJWT.js'; // Ajuste o caminho conforme necessário
+import { checkJWT } from '/static/js/services/checkJWT.js';
+import { navigateTo } from '/static/js/router.js';
 
+async function fetchApiData(url) {
+    const jwtToken = localStorage.getItem('jwtToken');
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data from ${url}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        localStorage.removeItem('jwtToken'); // Remove JWT if there's an API error
+        window.location.href = 'http://localhost'; // Redirect to the login page
+        return null;
+    }
+}
 export default async function Dashboard() {
+
+    if (!await checkJWT()) {
+        return null; // Stop rendering if JWT is not valid
+    }
+
     const element = document.createElement('div');
+    const playerInfo = await fetchApiData('/api/player-info');
+    const playerScore = await fetchApiData('/api/player-score');
+
+
+// Parte do código onde você gera a tabela de pontos
+const scoresHtml = playerScore && playerScore.scores
+    ? playerScore.scores.map(score => `
+        <tr>
+            <th scope="row">${score.position}</th>
+            <td>${score.player}</td>
+            <td>${score.points}</td>
+        </tr>
+    `).join('')
+    : '<tr><td colspan="3">No Score found</td></tr>';
+
+    console.log("Player Info:", playerInfo);
+
     element.innerHTML = `
         <!-- Navigation bar | Web component -->
-        <navigation-bar></navigation-bar>
+        <div class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">${playerInfo ? `Welcome, ${playerInfo.username}` : 'Welcome'}</span>
+            </div>
+        </div>
 
         <!-- Container to put elements on page -->
         <div class="container mt-3">
-            <!-- Row to put elements side by side -->
             <div class="row justify-content-between">
-                <!-- column to put elements on page -->
-                <div class="col-12 col-md-6">
-                    <!-- Block of content to put elements on page -->
-                    <div class="border border-3 boder-black m-1 p-4">
-                        <h2>Modos de jogar</h2>
-                        <p>
-                            Está pronto para se divertir? No modo Han Solo, você encara a clássica batalha de Pong sozinho, onde a rapidez e a precisão são suas melhores aliadas.
-                            Ou, se prefere um desafio mais intenso, enfrente a Skynet e teste suas habilidades contra a IA. Prove que os humanos ainda são superiores e que as máquinas não podem nos dominar... ainda!
-                        </p>
-                        <div class="d-grid ">
-                            <button type="button" class="btn btn-primary btn-block">Han Solo</button>
-                            <p class="text-center fs-5">ou</p>
-                            <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='game.html'">Contra a Skynet</button>
+                <!-- Left column for Games -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">Modos de jogar</div>
+                        <div class="card-body">
+                            <p>Está pronto para se divertir? No modo Han Solo, você encara a clássica batalha de Pong sozinho, onde a rapidez e a precisão são suas melhores aliadas. Ou, se prefere um desafio mais intenso, enfrente a Skynet e teste suas habilidades contra a IA. Prove que os humanos ainda são superiores e que as máquinas não podem nos dominar... ainda!</p>
+                            <button type="button" class="btn btn-primary">Han Solo</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='game.html'">Contra a Skynet</button>
                         </div>
                     </div>
-                    <!-- Block of content to put elements on page -->
-                    <div class="border border-3 boder-black m-1 p-4">
-                        <h2>Torneio online</h2>
-                        <p>
-                            Desafie seus amigos em um torneio online e mostre quem é o melhor.
-                            Mostre suas habilidades e seja o primeiro do ranking.
-                        </p>
-                        <!-- Button Block -->
-                        <div class="d-grid">
-                            <button type="button" class="btn btn-primary btn-block d-grid">Torneio online</button>
+                    <div class="card mt-4">
+                        <div class="card-header">Torneio online</div>
+                        <div class="card-body">
+                            <p>Desafie seus amigos em um torneio online e mostre quem é o melhor. Mostre suas habilidades e seja o primeiro do ranking.</p>
+                            <button type="button" class="btn btn-primary">Torneio online</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <div class="border border-3 boder-black m-1 p-4 justify-content-between align-items-center">
-                        <h2>Score Points</h2>
-                        <!-- Table to ranking on page -->
-                        <table class="table justify-content-between">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Posição</th>
-                                    <th scope="col">Jogador</th>
-                                    <th scope="col">Pontos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Ygor</td>
-                                    <td>7398</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>6790</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>John</td>
-                                    <td>6215</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Sarah</td>
-                                    <td>5890</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Emily</td>
-                                    <td>5423</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">6</th>
-                                    <td>Michael</td>
-                                    <td>5120</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">7</th>
-                                    <td>David</td>
-                                    <td>4789</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">8</th>
-                                    <td>Emma</td>
-                                    <td>4512</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">9</th>
-                                    <td>Ava</td>
-                                    <td>4290</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">10</th>
-                                    <td>Noah</td>
-                                    <td>4023</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                <!-- Right column for Scoreboard -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">Score Points</div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Posição</th>
+                                        <th scope="col">Jogador</th>
+                                        <th scope="col">Pontos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${scoresHtml}</tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     `;
 
-    // Verifica se o JWT é válido antes de carregar o Dashboard
-    const isValidJWT = await checkJWT();
-    if (!isValidJWT) {
-        const invalidJWTElement = document.createElement('div');
-        invalidJWTElement.textContent = 'JWT inválido. Redirecionando para a página de login...';
-        return invalidJWTElement; // Retorna um nó válido, mas com uma mensagem
-    }
+    return element;    
 
-    return element;
 }

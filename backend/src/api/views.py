@@ -131,3 +131,51 @@ def validate_oauth_login(request):
     except Exception as e:
         logger.error(f'Error in validate_oauth_login: {e}')
         return JsonResponse({'error': str(e)}, status=500)
+
+@require_http_methods(["GET"])
+def player_info(request):
+    logger.info("player_info")
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Token not provided'}, status=400)
+
+    token = auth_header.split(' ')[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+    except DecodeError:
+        return JsonResponse({'error': 'Invalid token'}, status=401)
+
+    logger.info("success player info:", payload)
+
+    return JsonResponse({
+        'status': 'success',
+        'username': payload['username'],
+        'email': payload['email']
+    }, status=200)
+
+@require_http_methods(["GET"])
+def player_score(request):
+    logger.info("player_score")
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Token not provided'}, status=400)
+
+    token = auth_header.split(' ')[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+    except DecodeError:
+        return JsonResponse({'error': 'Invalid token'}, status=401)
+
+    logger.info("success:", payload)
+
+    # Mock scores data
+    scores = [
+        {'position': 1, 'player': 'Ygor', 'points': 7398},
+        {'position': 2, 'player': 'Jacob', 'points': 6790},
+        {'position': 3, 'player': 'John', 'points': 6215},
+    ]
+
+    return JsonResponse({
+        'status': 'success',
+        'scores': scores
+    }, status=200)

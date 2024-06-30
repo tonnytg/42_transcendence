@@ -22,7 +22,7 @@ export async function Router() {
             component = About();
             break;
         case '/dashboard':
-            component = await Dashboard(); // Await the async function
+            component = await Dashboard();
             break;
         case '/pong':
             component = Pong();

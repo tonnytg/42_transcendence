@@ -21,7 +21,6 @@ export function handleCallback() {
             if (!response.ok) {
                 throw new Error('Failed to validate OAuth login');
             }
-            console.log("success to check code, response:", response)
 
             // 3. Validado, gera com o backend um JWT
             const data = await response.json();
