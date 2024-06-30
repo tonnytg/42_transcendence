@@ -4,7 +4,7 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('API_SECRET_KEY')
+SECRET_KEY = os.environ.get('APP_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,11 +48,11 @@ CLIENT_SECRET_42 = os.environ.get('APP_AUTH_CLIENT_SECRET')
 REDIRECT_URI_42 = os.environ.get('APP_AUTH_REDIRECT_URI')
 
 # settings.py
-OAUTH_CLIENT_ID = 'u-s4t2ud-949c9204ce2bacc41d9143cdcb52e5152e57d57686ef9cad4cfbe996f15a106e'
-OAUTH_CLIENT_SECRET = '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'
+OAUTH_CLIENT_ID = os.environ.get('APP_AUTH_CLIENT_ID')
+OAUTH_CLIENT_SECRET = os.environ.get('APP_AUTH_CLIENT_SECRET')
 
 # Chave criada pelo Gilmar
-SECRET_KEY_JWT = 'XZofzeCoM-JjFfHGmPMxj-8ntGm6ThE2gUcASy_yLTQ='
+SECRET_KEY_JWT = os.environ.get('SECRET_KEY_JWT')
 
 # Configuration for JWT using djangorestframework-jwt
 JWT_AUTH = {
