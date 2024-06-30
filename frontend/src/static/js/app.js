@@ -1,7 +1,8 @@
-import { Router } from './router.js';
+import { Router } from './Router.js';
 import { handleCallback } from './services/callbackHandler.js';
-import './components/header/navigation-bar.js';
-// import './services/game.js';
+// import './components/header/navigation-bar.js';
+
+import { NavigationBar } from './components/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('root');

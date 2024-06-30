@@ -1,4 +1,4 @@
-import { navigateTo } from '../../../router.js';
+import { navigateTo } from '../../../Router.js';
 
 export default function Home() {
     const element = document.createElement('div');
