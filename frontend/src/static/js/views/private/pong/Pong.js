@@ -1,5 +1,5 @@
 // static/js/views/private/pong/Pong.js
-import { main as gameMain } from '../../services/game.js';
+import { main as gameMain } from '../../../services/game.js';
 
 export default function Pong() {
     const element = document.createElement('div');
@@ -70,9 +70,9 @@ export default function Pong() {
                             </div>
                         `;
 
-                        element.addEventListener('DOMNodeInserted', () => {
-                            gameMain();
-                        });
+    element.addEventListener('DOMNodeInserted', () => {
+        gameMain();
+    });
 
     return element;
 
