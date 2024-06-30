@@ -2,7 +2,24 @@ export default function Dashboard() {
     const element = document.createElement('div');
     element.innerHTML = `
                             <!-- Navigation bar | Web component -->
-                            <navigation-bar></navigation-bar>
+                            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                                <div class="container-fluid">
+                                    <a class="navbar-brand text-white" href="#">Pong</a>
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarNav">
+                                        <ul class="navbar-nav ms-auto">
+                                            <li class="nav-item">
+                                                <a class="nav-link text-white" href="/dashboard">Página inicial</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-white" href="/pong">Game</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
 
                             <!-- Container to put elements on page -->
                             <div class="container mt-3">
@@ -20,7 +37,7 @@ export default function Dashboard() {
                                             <div class="d-grid ">
                                                 <button type="button" class="btn btn-primary btn-block">Han Solo</button>
                                                 <p class="text-center fs-5">ou</p>
-                                                <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='game.html'">Contra a Skynet</button>
+                                                <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/pong'">Contra a Skynet</button>
                                             </div>
                                         </div>
                                         <!-- Block of content to put elements on page -->

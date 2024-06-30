@@ -1,3 +1,5 @@
+// static/js/services/game.js
+
 // Game settings and configurations
 const GAME_FONT = 'Press Start 2P';
 
@@ -394,9 +396,9 @@ class Render {
         if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
             // User vs AI mode
             this.context.fillText(
-                `You | ${player1Score.toString()}`, this.canvas.width * 0.25, 50);
+                `You [ ${player1Score.toString()} ]`, this.canvas.width * 0.25, 50);
             this.context.fillText(
-                `SKYNET | ${player2Score.toString()}`, this.canvas.width * 0.75, 50);
+                `SKYNET [ ${player2Score.toString()} ]`, this.canvas.width * 0.75, 50);
         } else if (SETTINGS.GAME_MODE === GAME_MODE.LOCAL_PVP) {
             // Player 1 vs Player 2 mode
             this.context.fillText(
@@ -472,7 +474,7 @@ class Game {
      *
      */
     _endGame() {
-        const winner = this.player1Score > this.player2Score ? 'Player 1' : 'Player 2';
+        const winner = this.player1Score > this.player2Score ? 'You' : 'Skynet';
         const gameOverModal = new bootstrap.Modal(document.getElementById('gameOverModal'));
         document.querySelector('#gameOverModal .modal-body').innerText = `${winner} wins!`;
         gameOverModal.show();
@@ -602,13 +604,15 @@ class Game {
 function main() {
     // Initialize canvas, i.e., 2D pong table's width and height
     const canvas = document.getElementById('gameCanvas');
-    canvas.width = SETTINGS.CANVAS_WIDTH;
-    canvas.height = SETTINGS.CANVAS_HEIGHT;
+    if (canvas) {
+        canvas.width = SETTINGS.CANVAS_WIDTH;
+        canvas.height = SETTINGS.CANVAS_HEIGHT;
 
-    const game = new Game(canvas);
+        const game = new Game(canvas);
 
-    // Start the game
-    game.start();
+        // Start the game
+        game.start();
+    }
 }
 
-main();
+export { main };
