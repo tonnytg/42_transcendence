@@ -1,4 +1,4 @@
-class ButtonBlock extends HTMLElement {
+export class ButtonBlock extends HTMLElement {
     connectedCallback() {
         this.classList.add('d-grid');
         this.innerHTML = `
