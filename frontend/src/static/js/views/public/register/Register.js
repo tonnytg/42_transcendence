@@ -1,4 +1,4 @@
-import { navigateTo } from '../../../router.js';
+import { navigateTo } from '/static/js/router.js'
 
 export default function Register() {
     const element = document.createElement('div');
