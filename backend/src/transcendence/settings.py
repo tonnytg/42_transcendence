@@ -24,7 +24,20 @@ INSTALLED_APPS = [
     'rest_framework',  # Adiciona o Django REST Framework
     'api',
     'account',
+    'channels',
+    'events',
 ]
+
+ASGI_APPLICATION = 'transcendence.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.getenv('REDIS_URL', 'redis://redis:6379')],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

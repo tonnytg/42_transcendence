@@ -1,5 +1,6 @@
 import { checkJWT } from '/static/js/services/checkJWT.js';
 import { navigateTo } from '/static/js/router.js';
+import { sendChatMessage } from '/static/js/services/events/client.js';
 
 async function fetchApiData(url) {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -99,6 +100,12 @@ export default async function Dashboard() {
                             </table>
                         </div>
                     </div>
+                    <div class="card mt-4">
+                        <div class="card-header">Enviar Mensagem</div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Enviar Hello World</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,6 +115,12 @@ export default async function Dashboard() {
     window.navigateToProfile = function() {
         navigateTo('/profile');
     };
+
+    // Adicionar evento ao botão
+    const sendHelloWorldButton = element.querySelector('#sendHelloWorldButton');
+    sendHelloWorldButton.addEventListener('click', () => {
+        sendChatMessage('Hello World');
+    });
 
     return element;    
 }

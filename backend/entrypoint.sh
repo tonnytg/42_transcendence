@@ -5,4 +5,4 @@ python src/manage.py makemigrations
 python src/manage.py migrate
 
 # Start Server
-python src/manage.py runserver 0.0.0.0:8000
+daphne -b 0.0.0.0 -p 8000 transcendence.asgi:application
