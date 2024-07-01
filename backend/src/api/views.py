@@ -148,8 +148,24 @@ def player_info(request):
         return JsonResponse({'error': 'Invalid token'}, status=401)
 
     try:
-        user = User.objects.get(id=payload['user_id'])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload.get('user_id')
+        if not user_id:
+            return JsonResponse({'error': 'Invalid token'}, status=401)               
+        
+        user = User.objects.get(id=user_id)
 
+        print(f"Dados do usuário (id={user.id}):")
+        for field in user._meta.get_fields():
+            try:
+                value = getattr(user, field.name)
+                print(f"{field.name}: {value}")
+                logger.error(f"{field.name}: {value}")
+            except AttributeError:
+                # Tratar campos que não são atributos do modelo (como relacionamentos)
+                pass
+
+        logger.error(f'Error User: {user}')
         return JsonResponse({
             'status': 'success',
             'nickname': user.nickname,
@@ -167,6 +183,7 @@ def player_info(request):
 
 @csrf_exempt
 def update_profile(request):
+    logger.info("update_profile")
     if request.method == 'POST':
         auth_header = request.headers.get('Authorization')
         
@@ -181,15 +198,15 @@ def update_profile(request):
             return JsonResponse({'error': 'Invalid token'}, status=401)
 
         try:
-            user = User.objects.get(username=payload['username'])
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-            # Atualizar campos opcionais conforme dados recebidos no POST
-            if 'nickname' in request.POST:
-                user.profile.nickname = request.POST['nickname']
-            if 'theme' in request.POST:
-                user.profile.theme = request.POST['theme']
-            if 'is_mfa_enabled' in request.POST:
-                user.profile.is_mfa_enabled = bool(request.POST['is_mfa_enabled'])
+        try:
+            user = User.objects.get(username=payload['username'])
+            user.nickname = data['nickname']
+            user.theme = data['theme']
+            user.is_mfa_enabled = bool(data['is_mfa_enabled'])
 
             user.save()
 

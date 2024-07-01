@@ -24,8 +24,8 @@ async function fetchApiData(url) {
         return null;
     }
 }
-export default async function Dashboard() {
 
+export default async function Dashboard() {
     if (!await checkJWT()) {
         return null; // Stop rendering if JWT is not valid
     }
@@ -34,17 +34,16 @@ export default async function Dashboard() {
     const playerInfo = await fetchApiData('/api/player-info');
     const playerScore = await fetchApiData('/api/player-score');
 
-
-// Parte do código onde você gera a tabela de pontos
-const scoresHtml = playerScore && playerScore.scores
-    ? playerScore.scores.map(score => `
-        <tr>
-            <th scope="row">${score.position}</th>
-            <td>${score.player}</td>
-            <td>${score.points}</td>
-        </tr>
-    `).join('')
-    : '<tr><td colspan="3">No Score found</td></tr>';
+    // Parte do código onde você gera a tabela de pontos
+    const scoresHtml = playerScore && playerScore.scores
+        ? playerScore.scores.map(score => `
+            <tr>
+                <th scope="row">${score.position}</th>
+                <td>${score.player}</td>
+                <td>${score.points}</td>
+            </tr>
+        `).join('')
+        : '<tr><td colspan="3">No Score found</td></tr>';
 
     console.log("Player Info:", playerInfo);
 
@@ -53,6 +52,11 @@ const scoresHtml = playerScore && playerScore.scores
         <div class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <span class="navbar-brand mb-0 h1">${playerInfo ? `Welcome, ${playerInfo.username}` : 'Welcome'}</span>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-link nav-link" onclick="navigateToProfile()">Profile</button>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -100,6 +104,10 @@ const scoresHtml = playerScore && playerScore.scores
         </div>
     `;
 
-    return element;    
+    // Função para navegar para a página de perfil
+    window.navigateToProfile = function() {
+        navigateTo('/profile');
+    };
 
+    return element;    
 }
