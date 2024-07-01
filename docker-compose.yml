@@ -8,43 +8,58 @@ services:
       - ./frontend/src:/usr/share/nginx/html:ro
       - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
-  # backend:
-  #   build: ./backend
-  #   volumes:
-  #     - backend_data:/app
-  #   environment:
-  #     - APP_AUTH_CLIENT_ID
-  #     - APP_AUTH_CLIENT_SECRET
-  #     - APP_AUTH_REDIRECT_URI
-  #     - APP_DB_HOST
-  #     - APP_DB_PORT
-  #     - APP_DB_NAME
-  #     - APP_DB_USER
-  #     - APP_DB_PASSWORD
-  #     - APP_SECRET_KEY
-  #     - DJANGO_SETTINGS_MODULE=transcendence.settings
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
+  backend:
+    build: ./backend
+    volumes:
+      - backend_data:/app
+    environment:
+      - APP_AUTH_CLIENT_ID
+      - APP_AUTH_CLIENT_SECRET
+      - APP_AUTH_REDIRECT_URI
+      - APP_DB_HOST
+      - APP_DB_PORT
+      - APP_DB_NAME
+      - APP_DB_USER
+      - APP_DB_PASSWORD
+      - APP_SECRET_KEY
+      - DJANGO_SETTINGS_MODULE=transcendence.settings
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy    # networks:
+    #     - transcendence
 
-  # db:
-  #   image: postgres:16-alpine
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data/
-  #   environment:
-  #     - POSTGRES_DB
-  #     - POSTGRES_USER
-  #     - POSTGRES_PASSWORD
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #   ports:
-  #     - "5432:5432"
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  redis:
+    container_name: redis
+    image: redis:7.2.5-alpine
+    ports:
+      - "6379:6379"
+    # networks:
+    #     - transcendence
 
 volumes:
   postgres_data:
   backend_data:
+
+# networks:
+#   transcendence:
+#     name: transcendence

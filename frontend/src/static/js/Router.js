@@ -1,7 +1,8 @@
-import Home from './views/public/home/Home.js';
+// import Home from './views/public/home/Home.js';
 import About from './views/public/about/About.js';
 import Dashboard from './views/private/dashboard/Dashboard.js';
 import Pong from './views/private/pong/Pong.js';
+import LiveChat from './views/private/chat/Chat.js';
 
 export function Router() {
     const root = document.getElementById('root');
@@ -12,7 +13,8 @@ export function Router() {
 
     switch (path) {
         case '/':
-            component = Home();
+            component = LiveChat();
+            // component = Home();
             break;
         case '/about':
             component = About();
