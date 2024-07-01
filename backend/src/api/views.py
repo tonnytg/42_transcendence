@@ -3,7 +3,7 @@ import json
 import logging
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +11,9 @@ from django.views.decorators.http import require_http_methods
 import jwt
 import requests
 from jwt import InvalidTokenError
+from jwt import DecodeError
 
+User = get_user_model()
 logger = logging.getLogger(__name__)
 
 SECRET_KEY = settings.SECRET_KEY
@@ -132,7 +134,7 @@ def validate_oauth_login(request):
         logger.error(f'Error in validate_oauth_login: {e}')
         return JsonResponse({'error': str(e)}, status=500)
 
-@require_http_methods(["GET"])
+@csrf_exempt
 def player_info(request):
     logger.info("player_info")
     auth_header = request.headers.get('Authorization')
@@ -145,14 +147,61 @@ def player_info(request):
     except DecodeError:
         return JsonResponse({'error': 'Invalid token'}, status=401)
 
-    logger.info("success player info:", payload)
+    try:
+        user = User.objects.get(id=payload['user_id'])
 
-    return JsonResponse({
-        'status': 'success',
-        'username': payload['username'],
-        'email': payload['email']
-    }, status=200)
+        return JsonResponse({
+            'status': 'success',
+            'nickname': user.nickname,
+            'username': user.username,
+            'email': user.email,
+            'is_mfa_enabled': user.is_mfa_enabled,
+            'theme': user.theme
+        }, status=200)
 
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        logger.error(f'Error fetching player info: {e}')
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+@csrf_exempt
+def update_profile(request):
+    if request.method == 'POST':
+        auth_header = request.headers.get('Authorization')
+        
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Token not provided'}, status=400)
+
+        token = auth_header.split(' ')[1]
+        
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        except DecodeError:
+            return JsonResponse({'error': 'Invalid token'}, status=401)
+
+        try:
+            user = User.objects.get(username=payload['username'])
+
+            # Atualizar campos opcionais conforme dados recebidos no POST
+            if 'nickname' in request.POST:
+                user.profile.nickname = request.POST['nickname']
+            if 'theme' in request.POST:
+                user.profile.theme = request.POST['theme']
+            if 'is_mfa_enabled' in request.POST:
+                user.profile.is_mfa_enabled = bool(request.POST['is_mfa_enabled'])
+
+            user.save()
+
+            return JsonResponse({'status': 'Profile updated successfully'}, status=200)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
 @require_http_methods(["GET"])
 def player_score(request):
     logger.info("player_score")

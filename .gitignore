@@ -15,3 +15,6 @@ key.json
 env
 __pycache__
 .ruff.toml
+
+
+postgres_data/

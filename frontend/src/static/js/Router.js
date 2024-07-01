@@ -2,6 +2,7 @@ import Home from './views/public/home/Home.js';
 import About from './views/public/about/About.js';
 import Register from './views/public/register/Register.js';
 import Dashboard from './views/private/dashboard/Dashboard.js';
+import Profile from './views/private/profile/Profile.js';
 import Pong from './views/private/pong/Pong.js';
 
 export async function Router() {
@@ -24,6 +25,9 @@ export async function Router() {
         case '/dashboard':
             component = await Dashboard();
             break;
+        case '/profile':
+            component = await Profile();
+            break;            
         case '/pong':
             component = Pong();
             break;
