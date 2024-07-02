@@ -8,7 +8,7 @@ export default function Home() {
                 <div class="row border-rounded justify-content-center m-5 w-50 mx-auto">
                     <div class="card-body justify-content-center align-items-center">
                         <img class="mx-auto d-block" src="static/images/logo-m.png" alt="">
-                        <h2 class="card-title text-center" alt="The ultimate arcade Pong 3">The ultimate arcade PONG 3</h2>
+                        <h2 class="card-title text-center" alt="The ultimate arcade Pong">The ultimate arcade PONG</h2>
                         <form id="loginForm">
                             <div class="mb-3">
                                 <label for="username">Username</label>
