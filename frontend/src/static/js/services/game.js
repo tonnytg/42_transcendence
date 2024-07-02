@@ -611,4 +611,4 @@ function main() {
     game.start();
 }
 
-main();
+export { main };

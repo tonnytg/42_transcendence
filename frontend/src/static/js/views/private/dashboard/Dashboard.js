@@ -52,7 +52,7 @@ export default async function Dashboard() {
         <!-- Navigation bar | Web component -->
         <div class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">${playerInfo ? `Welcome, ${playerInfo.username}` : 'Welcome'}</span>
+                <span class="navbar-brand mb-0 h1">${playerInfo ? `Welcome, ${playerInfo.nickname}` : 'Welcome'}</span>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <button type="button" class="btn btn-link nav-link" onclick="navigateToProfile()">Profile</button>
@@ -75,12 +75,19 @@ export default async function Dashboard() {
                         </div>
                     </div>
                     <div class="card mt-4">
-                        <div class="card-header">Torneio online</div>
+                        <div class="card-header">Torneio online e Chat</div>
                         <div class="card-body">
                             <p>Desafie seus amigos em um torneio online e mostre quem é o melhor. Mostre suas habilidades e seja o primeiro do ranking.</p>
                             <button type="button" class="btn btn-primary">Torneio online</button>
+                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Chat</button>
                         </div>
                     </div>
+                    <div class="card mt-4">
+                        <div class="card-header">Enviar Mensagem</div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Enviar Hello World</button>
+                        </div>
+                    </div>                    
                 </div>
 
                 <!-- Right column for Scoreboard -->
