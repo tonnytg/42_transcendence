@@ -71,7 +71,7 @@ export default async function Dashboard() {
                         <div class="card-body">
                             <p>Está pronto para se divertir? No modo Han Solo, você encara a clássica batalha de Pong sozinho, onde a rapidez e a precisão são suas melhores aliadas. Ou, se prefere um desafio mais intenso, enfrente a Skynet e teste suas habilidades contra a IA. Prove que os humanos ainda são superiores e que as máquinas não podem nos dominar... ainda!</p>
                             <button type="button" class="btn btn-primary">Han Solo</button>
-                            <button type="button" class="btn btn-secondary" onclick="window.location.href='game.html'">Contra a Skynet</button>
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/pong'">Contra a Skynet</button>
                         </div>
                     </div>
                     <div class="card mt-4">
@@ -79,15 +79,9 @@ export default async function Dashboard() {
                         <div class="card-body">
                             <p>Desafie seus amigos em um torneio online e mostre quem é o melhor. Mostre suas habilidades e seja o primeiro do ranking.</p>
                             <button type="button" class="btn btn-primary">Torneio online</button>
-                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Chat</button>
+                            <button type="button" class="btn btn-primary" id="openChat">Chat</button>
                         </div>
                     </div>
-                    <div class="card mt-4">
-                        <div class="card-header">Enviar Mensagem</div>
-                        <div class="card-body">
-                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Enviar Hello World</button>
-                        </div>
-                    </div>                    
                 </div>
 
                 <!-- Right column for Scoreboard -->
@@ -107,12 +101,6 @@ export default async function Dashboard() {
                             </table>
                         </div>
                     </div>
-                    <div class="card mt-4">
-                        <div class="card-header">Enviar Mensagem</div>
-                        <div class="card-body">
-                            <button type="button" class="btn btn-primary" id="sendHelloWorldButton">Enviar Hello World</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -124,10 +112,10 @@ export default async function Dashboard() {
     };
 
     // Adicionar evento ao botão
-    const sendHelloWorldButton = element.querySelector('#sendHelloWorldButton');
-    sendHelloWorldButton.addEventListener('click', () => {
-        sendChatMessage('Hello World');
+    const openChat = element.querySelector('#openChat');
+    openChat.addEventListener('click', () => {
+        navigateTo('/chat');
     });
 
-    return element;    
+    return element;
 }
