@@ -3,7 +3,9 @@ import About from './views/public/about/About.js';
 import Register from './views/public/register/Register.js';
 import Dashboard from './views/private/dashboard/Dashboard.js';
 import Profile from './views/private/profile/Profile.js';
+import Chat from './views/private/chat/Chat.js';
 import Pong from './views/private/pong/Pong.js';
+
 
 export async function Router() {
     const root = document.getElementById('root');
@@ -27,7 +29,10 @@ export async function Router() {
             break;
         case '/profile':
             component = await Profile();
-            break;            
+            break;  
+        case '/chat':
+                component = await Chat();
+                break;                       
         case '/pong':
             component = Pong();
             break;

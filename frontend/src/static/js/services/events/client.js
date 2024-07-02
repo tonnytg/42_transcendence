@@ -48,7 +48,11 @@ function displayNotification(message) {
 }
 
 function displayChatMessage(message) {
-    console.log('Chat:', message); // Você pode usar outra forma de exibição, como adicionar a uma área de chat
+    if (typeof window.displayChatMessage === 'function') {
+        window.displayChatMessage(message);
+    } else {
+        console.log('Chat:', message); // Fallback para exibir no console
+    }
 }
 
 // Para enviar uma notificação
