@@ -30,15 +30,18 @@ export async function Router() {
             break;
         case '/mfa':
             component = await ValidateMFA();
-            break;            
+            break;
         case '/profile':
             component = await Profile();
-            break;  
+            break;
         case '/chat':
                 component = await Chat();
-                break;                       
+                break;
         case '/pong':
             component = Pong();
+            break;
+        case '/playgame?mode=' + mode:
+            component = PlayGame();
             break;
         default:
             component = document.createElement('div');

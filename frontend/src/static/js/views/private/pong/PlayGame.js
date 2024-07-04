@@ -1,35 +1,36 @@
 import { main as gameMain } from '/static/js/services/game.js';
 
-export default function Pong() {
+export default function PlayGame() {
     const element = document.createElement('div');
     element.innerHTML = `
         <!-- Navigation bar | Web component -->
         <navigation-bar></navigation-bar>
 
-        <div class="container mt-5">
-            <div class="row border border-3 border-black p-2">
-                <div class="col-12 col-md-8">
-                    <canvas id="gameCanvas" class="w-100 h-100" width="800" height="600"></canvas>
-                </div>
-                <div class="col-12 col-md-4">
-                    <h1 class="text-center">Choose Game Mode</h1>
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-primary mx-2" onclick="startGame('TRAINING')">Training Mode</button>
-                        <button class="btn btn-primary mx-2" onclick="startGame('SOLO_PLAYER')">Solo Player</button>
-                        <button class="btn btn-primary mx-2" onclick="startGame('LOCAL_PVP')">Local PvP</button>
-                    </div>
-                </div>
+        <div class="container mt-3">
+            <div class="row border border-3 boder-black p-2 canvas-container">
+                <!-- Game canvas -->
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
             </div>
         </div>
     `;
 
     const style = document.createElement('style');
     style.textContent = `
-        body {
+        body, html {
+            height: 100%;
+            margin: 0;
             font-family: 'Silkscreen', cursive;
+        }
+        .canvas-container {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #gameCanvas {
             background-color: black;
+            width: 100%;
+            height: 100%;
         }
     `;
     document.head.appendChild(style);
@@ -51,13 +52,25 @@ export default function Pong() {
     document.head.appendChild(script);
 
     element.addEventListener('DOMNodeInserted', () => {
+        // Função para obter o parâmetro da URL
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Obtenha o modo de jogo da URL
+        const gameMode = getParameterByName('mode');
+        if (gameMode) {
+            SETTINGS.GAME_MODE = GAME_MODE[gameMode.toUpperCase()];
+        }
+
+        // Inicializa e inicia o jogo
         gameMain();
     });
-
-    // Função para iniciar o jogo com o modo selecionado
-    window.startGame = function(mode) {
-        window.location.href = '/pong?mode=' + mode;
-    };
 
     return element;
 }

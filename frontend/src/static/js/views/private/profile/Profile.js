@@ -31,7 +31,7 @@ export default async function Profile() {
     try {
         // Função para buscar informações do usuário na API
         const userInfo = await fetchApiLocal('/api/player-info');
-        
+
         // Elemento principal que será retornado
         const element = document.createElement('div');
 
@@ -49,6 +49,12 @@ export default async function Profile() {
             const renderProfileForm = () => {
                 // Formulário para editar informações do perfil
                 const profileForm = `
+                            <div class="container d-flex flex-column align-content-center justify-content-center vh-100">
+            <div class="card col-2-md w-100">
+                <div class="row border-rounded justify-content-center m-5 w-50 mx-auto">
+                    <div class="card-body justify-content-center align-items-center">
+                        <img class="mx-auto d-block mb-4" src="static/images/logo.svg" alt="">
+                        <h2 class="card-title text-center">Profile</h2>
                     <form id="profileForm">
                         <div class="mb-3">
                             <label for="nickname" class="form-label">Nickname</label>
@@ -61,7 +67,7 @@ export default async function Profile() {
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="text" class="form-control" id="email" value="${userInfo.email}" required>
-                        </div>            
+                        </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="isMFAEnabled" ${userInfo.is_mfa_enabled ? 'checked' : ''}>
                             <label class="form-check-label" for="isMFAEnabled">Multi-Factor Authentication Enabled</label>
@@ -75,6 +81,10 @@ export default async function Profile() {
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
+                    </div>
+                </div>
+            </div>
+        </div>
                 `;
 
                 element.innerHTML = profileForm;
