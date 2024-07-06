@@ -1,11 +1,14 @@
+// game.js
+
 // Game settings and configurations
-const GAME_FONT = 'Press Start 2P';
+const GAME_FONT = 'Silkscreen';
 
 // Game mode options
 const GAME_MODE = {
     TRAINING: 'wall',
     SOLO_PLAYER: 'single',
-    LOCAL_PVP: 'local'
+    LOCAL_PVP: 'local',
+    FOUR_PLAYER: 'fourplayer'
 };
 
 const SETTINGS = {
@@ -21,7 +24,7 @@ const SETTINGS = {
     MAX_BALL_SPEED: 10,
     BALL_SPEED_INCREASE: 0.05,
     PLAYER_SPEED: 10,
-    GAME_MODE: GAME_MODE.SOLO_PLAYER, // 'single' or 'local'
+    GAME_MODE: localStorage.getItem('gameMode') || GAME_MODE.SOLO_PLAYER, // 'single' or 'local'
     AI_DIFFICULTY: 'medium', // 'easy', 'medium', 'hard', 'legend'
     AI_TIME_STEPS: 0.01667, // Considering 60 fps
     WINNING_SCORE: 3, // Define winning score
@@ -332,7 +335,7 @@ class Render {
         this.context = canvas.getContext('2d');
     }
 
-    drawGame(player1, player2, player3, player4, ball, player1Score, player2Score) {
+    drawGame(player1, player2, player3, player4, ball, players13Score, players24Score) {
         this.context.fillStyle = SETTINGS.BACKGROUND_COLOR;
 
         // Fill the canvas with background color
@@ -347,7 +350,7 @@ class Render {
         }
 
         this._drawBall(ball);
-        this._drawScores(player1Score, player2Score);
+        this._drawScores(players13Score, players24Score);
     }
 
     resetBall(ball) {
@@ -459,7 +462,15 @@ class Game {
 
     _endGame() {
         const winner = this.players13Score > this.players24Score ? `${this.player1Name} and ${this.player3Name}` : `${this.player2Name} and ${this.player4Name}`;
-        alert(`${winner} win!`);
+
+        // Atualize o modal "match over"
+        const modalBody = document.querySelector('#gameOverModal .modal-body');
+        modalBody.textContent = `${winner} win!`;
+
+        // Exiba o modal
+        const gameOverModal = new bootstrap.Modal(document.getElementById('gameOverModal'));
+        gameOverModal.show();
+
         this.isGameRunning = false;
         this.isGamePaused = true;
     }
@@ -613,16 +624,14 @@ class Game {
     }
 }
 
-
 function main() {
-    // Initialize canvas, i.e., 2D pong table's width and height
     const canvas = document.getElementById('gameCanvas');
     canvas.width = SETTINGS.CANVAS_WIDTH;
     canvas.height = SETTINGS.CANVAS_HEIGHT;
 
     const game = new Game(canvas);
 
-    // Start the game
+    // Inicia o jogo
     game.start();
 }
 

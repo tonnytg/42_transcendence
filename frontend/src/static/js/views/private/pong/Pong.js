@@ -2,7 +2,7 @@ import { main as gameMain } from '/static/js/services/game.js';
 
 export default function Pong() {
     const playerInfo = JSON.parse(localStorage.getItem('playerInfo')) || { nickname: 'Player 1' };
-    
+
     const element = document.createElement('div');
     element.innerHTML = `
                             <!-- Navigation bar | Web component -->
@@ -17,9 +17,9 @@ export default function Pong() {
                                 </div>
                             </div>
 
-                            <div class="container mt-3">
-                                <div class="row border border-3 p-2">
-                                    <canvas id="gameCanvas" class="w-100 h-100" width="800" height="600"></canvas>
+                            <div class="container">
+                                <div class="row border border-3">
+                                    <canvas id="gameCanvas" width="800" height="600"></canvas>
                                 </div>
                             </div>
 

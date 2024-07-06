@@ -21,7 +21,7 @@ export default function GameMode() {
         <div class="container mt-3">
             <div class="row border border-3 p-2">
                     <h1 class="text-center">Escolha o Modo de Jogo</h1>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center align-content-center">
                         <button class="btn btn-primary mx-2" onclick="selectGameMode('TRAINING')">Han Solo</button>
                         <button class="btn btn-primary mx-2" onclick="selectGameMode('SOLO_PLAYER')">Versus Skynet</button>
                         <button class="btn btn-primary mx-2" onclick="showPlayerNameInputs('LOCAL_PVP')">Human vs Human</button>
