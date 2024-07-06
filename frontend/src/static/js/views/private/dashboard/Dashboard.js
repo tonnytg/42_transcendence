@@ -115,8 +115,7 @@ export default async function Dashboard() {
                         <div class="card-header">Modos de jogar</div>
                         <div class="card-body">
                             <p>Está pronto para se divertir? No modo Han Solo, você encara a clássica batalha de Pong sozinho, onde a rapidez e a precisão são suas melhores aliadas. Ou, se prefere um desafio mais intenso, enfrente a Skynet e teste suas habilidades contra a IA. Prove que os humanos ainda são superiores e que as máquinas não podem nos dominar... ainda!</p>
-                            <button type="button" class="btn btn-primary" onclick="handleGameMode(0)">Han Solo</button>
-                            <button type="button" class="btn btn-secondary" onclick="handleGameMode(1)">Contra a Skynet</button>
+                            <button id="gamemode" type="button" class="btn btn-primary btn-block">Pong Mode</button>
                         </div>
                     </div>
                     <div class="card mt-4">
@@ -171,6 +170,11 @@ export default async function Dashboard() {
         navigateTo('/profile');
     };
 
+    // Fun˜ção para navegar para a página de escolha de modo de jogo
+    element.querySelector('#gamemode').addEventListener('click', () => {
+        navigateTo('/gamemode');
+    });
+
     // Adicionar evento ao botão
     const openChat = element.querySelector('#openChat');
     openChat.addEventListener('click', () => {
@@ -224,7 +228,7 @@ window.handleFriendship = function(userUuid) {
 
 window.handleGameparty = async function(userUuid) {
     console.log('Gameparty with:', userUuid);
-    
+
     const playerInfo = await fetchApiData('/api/player-info');
     if (!playerInfo || !playerInfo.user_uuid) {
         console.error('Failed to get player info.');
@@ -236,7 +240,7 @@ window.handleGameparty = async function(userUuid) {
 
 window.handleGameMode = async function(gameRoomType) {
     console.log('Starting game mode:', gameRoomType);
-    
+
     const playerInfo = await fetchApiData('/api/player-info');
     if (!playerInfo || !playerInfo.user_uuid) {
         console.error('Failed to get player info.');

@@ -7,7 +7,8 @@ const GAME_FONT = 'Silkscreen';
 const GAME_MODE = {
     TRAINING: 'wall',
     SOLO_PLAYER: 'single',
-    LOCAL_PVP: 'local'
+    LOCAL_PVP: 'local',
+    FOUR_PLAYER: 'fourplayer'
 };
 
 const SETTINGS = {
@@ -23,7 +24,7 @@ const SETTINGS = {
     MAX_BALL_SPEED: 10,
     BALL_SPEED_INCREASE: 0.05,
     PLAYER_SPEED: 10,
-    GAME_MODE: GAME_MODE.SOLO_PLAYER, // 'single' or 'local'
+    GAME_MODE: localStorage.getItem('gameMode') || GAME_MODE.SOLO_PLAYER, // 'single' or 'local'
     AI_DIFFICULTY: 'medium', // 'easy', 'medium', 'hard', 'legend'
     AI_TIME_STEPS: 0.01667, // Considering 60 fps
     WINNING_SCORE: 3, // Define winning score
@@ -334,20 +335,18 @@ class Render {
         this.context = canvas.getContext('2d');
     }
 
-    drawGame(player1, player2, ai, ball, player1Score, player2Score) {
+    drawGame(player1, player2, player3, player4, ball, player1Score, player2Score) {
         this.context.fillStyle = SETTINGS.BACKGROUND_COLOR;
 
         // Fill the canvas with background color
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this._drawNet();
         this._drawPaddle(player1);
+        this._drawPaddle(player2);
 
-        if (SETTINGS.GAME_MODE === GAME_MODE.TRAINING) {
-            this._drawPaddleAsWall();
-        } else if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
-            this._drawPaddle(ai);
-        } else if (SETTINGS.GAME_MODE === GAME_MODE.LOCAL_PVP) {
-            this._drawPaddle(player2);
+        if (SETTINGS.GAME_MODE === GAME_MODE.FOUR_PLAYER) {
+            this._drawPaddle(player3);
+            this._drawPaddle(player4);
         }
 
         this._drawBall(ball);
@@ -358,10 +357,8 @@ class Render {
         ball.x = this.canvas.width / 2;
         ball.y = this.canvas.height / 2;
         ball.speed = SETTINGS.INITIAL_BALL_SPEED;
-        ball.dx =
-            SETTINGS.INITIAL_BALL_SPEED * (Math.random() < 0.5 ? -1 : 1);
-        ball.dy =
-            SETTINGS.INITIAL_BALL_SPEED * (Math.random() < 0.5 ? -1 : 1);
+        ball.dx = SETTINGS.INITIAL_BALL_SPEED * (Math.random() < 0.5 ? -1 : 1);
+        ball.dy = SETTINGS.INITIAL_BALL_SPEED * (Math.random() < 0.5 ? -1 : 1);
     }
 
     drawCountdown(count) {
@@ -391,39 +388,14 @@ class Render {
         this.context.fillRect(player.x, player.y, player.width, player.height);
     }
 
-    _drawPaddleAsWall() {
-        this.context.fillStyle = SETTINGS.PADDLE_COLOR;
-        this.context.fillRect(
-            this.canvas.width - SETTINGS.PADDLE_WIDTH - 10,
-            0,
-            SETTINGS.PADDLE_WIDTH,
-            this.canvas.height
-        );
-    }
-
-    _drawScores(player1Score, player2Score) {
+    _drawScores(players13Score, players24Score) {
         this.context.font = SETTINGS.SCOREBOARD_FONT;
         this.context.fillStyle = SETTINGS.SCOREBOARD_STYLE;
         this.context.textAlign = SETTINGS.SCOREBOARD_ALIGN;
-
-        if (SETTINGS.GAME_MODE === GAME_MODE.TRAINING) {
-            this.context.fillText(
-                `You | ${player1Score.toString()}`, this.canvas.width * 0.25, 50);
-            this.context.fillText(
-                `WALL | ${player2Score.toString()}`, this.canvas.width * 0.75, 50);
-        } else if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
-            // User vs AI mode
-            this.context.fillText(
-                `You | ${player1Score.toString()}`, this.canvas.width * 0.25, 50);
-            this.context.fillText(
-                `SKYNET | ${player2Score.toString()}`, this.canvas.width * 0.75, 50);
-        } else if (SETTINGS.GAME_MODE === GAME_MODE.LOCAL_PVP) {
-            // Player 1 vs Player 2 mode
-            this.context.fillText(
-                `Player 1: ${player1Score.toString()}`, this.canvas.width * 0.25, 50);
-            this.context.fillText(
-                `Player 2: ${player2Score.toString()}`, this.canvas.width * 0.75, 50);
-        }
+        this.context.fillText(
+            players13Score.toString(), this.canvas.width * 0.25, 50);
+        this.context.fillText(
+            players24Score.toString(), this.canvas.width * 0.75, 50);
     }
 
     _drawNet() {
@@ -432,8 +404,10 @@ class Render {
         this.context.setLineDash(
             [SETTINGS.NET_DASH_LENGTH, SETTINGS.NET_GAP_LENGTH]);
         this.context.beginPath();
-        this.context.moveTo(this.canvas.width / 2, 0);
-        this.context.lineTo(this.canvas.width / 2, this.canvas.height);
+        this.context.moveTo(0, 0);
+        this.context.lineTo(this.canvas.width, this.canvas.height);
+        this.context.moveTo(this.canvas.width, 0);
+        this.context.lineTo(0, this.canvas.height);
         this.context.stroke();
         // Reset to solid lines for other drawings
         this.context.setLineDash([]);
@@ -445,67 +419,46 @@ class Game {
         this.canvas = canvas;
         this.ball = new Ball(canvas);
         this.render = new Render(canvas);
-        this.player1 = new Player(canvas, 10,
-            (canvas.height - SETTINGS.PADDLE_HEIGHT) / 2);
-        this.player2 = new Player(canvas,
-            canvas.width - SETTINGS.PADDLE_WIDTH - 10,
-            (canvas.height - SETTINGS.PADDLE_HEIGHT) / 2);
-        this.ai = new AI(canvas, this.ball,
-            canvas.width - SETTINGS.PADDLE_WIDTH - 10,
-            (canvas.height - SETTINGS.PADDLE_HEIGHT) / 2);
+        this.player1 = new Player(canvas, 10, (canvas.height - SETTINGS.PADDLE_HEIGHT) / 2);
+        this.player2 = new Player(canvas, canvas.width - SETTINGS.PADDLE_WIDTH - 10, (canvas.height - SETTINGS.PADDLE_HEIGHT) / 2);
+
+        if (SETTINGS.GAME_MODE === GAME_MODE.FOUR_PLAYER) {
+            this.player3 = new Player(canvas, (canvas.width - SETTINGS.PADDLE_HEIGHT) / 2, 10, true);
+            this.player4 = new Player(canvas, (canvas.width - SETTINGS.PADDLE_HEIGHT) / 2, canvas.height - SETTINGS.PADDLE_WIDTH - 10, true);
+        }
+
         this.player1Score = 0;
         this.player2Score = 0;
         this.isGameRunning = false;
         this.isGamePaused = false;
 
-        // document.getElementById('restartGameButton').addEventListener('click', () => {
-        //     this.restartGame();
-        // });
+        document.getElementById('restartGameButton').addEventListener('click', () => {
+            this.restartGame();
+        });
     }
 
     start() {
         // Increase speed every second
-        setInterval(
-            () => this._increaseBallSpeed(), SETTINGS.COUNTDOWN_INTERVAL);
+        setInterval(() => this._increaseBallSpeed(), SETTINGS.COUNTDOWN_INTERVAL);
         this._startCountdown();
-        this._addTouchControls();  // Add touch controls when the game starts
     }
 
     _increaseBallSpeed() {
         if (Math.abs(this.ball.dx) < SETTINGS.MAX_BALL_SPEED) {
-            this.ball.dx +=
-                Math.sign(this.ball.dx) * SETTINGS.BALL_SPEED_INCREASE;
+            this.ball.dx += Math.sign(this.ball.dx) * SETTINGS.BALL_SPEED_INCREASE;
         }
         if (Math.abs(this.ball.dy) < SETTINGS.MAX_BALL_SPEED) {
-            this.ball.dy +=
-                Math.sign(this.ball.dy) * SETTINGS.BALL_SPEED_INCREASE;
+            this.ball.dy += Math.sign(this.ball.dy) * SETTINGS.BALL_SPEED_INCREASE;
         }
     }
 
-    /**
-     * This method displays a modal with the winner's name
-     * and resets the game state.
-     *
-     * @private
-     * @memberof Game
-     * @returns {void}
-     *
-     */
     _endGame() {
-        const winner = this.player1Score > this.player2Score ? 'Player 1' : 'Player 2';
+        const winner = this.players13Score > this.players24Score ? 'Player 1 and Player 3' : 'Player 2 and Player 4';
         alert(`${winner} wins!`);
         this.isGameRunning = false;
         this.isGamePaused = true;
     }
 
-    /**
-     * This method restarts the game by resetting the scores,
-     * ball position, and starting the countdown.
-     *
-     * @memberof Game
-     * @returns {void}
-     *
-    */
     restartGame() {
         this.player1Score = 0;
         this.player2Score = 0;
@@ -531,7 +484,7 @@ class Game {
         if (this.isGameRunning) {
             this._update();
             this.render.drawGame(
-                this.player1, this.player2, this.ai, this.ball,
+                this.player1, this.player2, this.player3, this.player4, this.ball,
                 this.player1Score, this.player2Score);
             requestAnimationFrame(() => this._gameLoop());
         }
@@ -540,18 +493,15 @@ class Game {
     _update() {
         if (!this.isGameRunning || this.isGamePaused) return;
 
-        if (SETTINGS.GAME_MODE === GAME_MODE.TRAINING) {
-            this.player1.move(CONTROLS.WASD.UP,
-                CONTROLS.WASD.DOWN, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
-        } else if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
-            this.player1.move(CONTROLS.WASD.UP,
-                CONTROLS.WASD.DOWN, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
+        this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
+        if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
             this.ai.move(this.ball);
         } else if (SETTINGS.GAME_MODE === GAME_MODE.LOCAL_PVP) {
-            this.player1.move(
-                CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
-            this.player2.move(
-                null, null, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
+            this.player2.move(null, null, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
+        } else if (SETTINGS.GAME_MODE === GAME_MODE.FOUR_PLAYER) {
+            this.player2.move(null, null, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
+            this.player3.move(null, null, CONTROLS.AD.LEFT, CONTROLS.AD.RIGHT);
+            this.player4.move(null, null, CONTROLS.LR.LEFT, CONTROLS.LR.RIGHT);
         }
 
         this.ball.move();
@@ -559,8 +509,13 @@ class Game {
         this._checkScore();
         this._checkWin();
 
-        // Reset ball if out of bounds
-        if (this.ball.x < 0 || this.ball.x > this.canvas.width) {
+        // Reset the ball if it goes out of bounds
+        if (
+            this.ball.x < 0 ||
+            this.ball.x > this.canvas.width ||
+            this.ball.y < this.ball.radius ||
+            this.ball.y > this.canvas.height - this.ball.radius
+        ) {
             this.render.resetBall(this.ball);
         }
     }
@@ -571,10 +526,15 @@ class Game {
             this._handlePaddleCollision(this.player1);
         }
 
-        // Player2 or AI paddle collision
-        if (SETTINGS.GAME_MODE === GAME_MODE.TRAINING) {
-            if (this._isBallWallCollision()) {
-                this._handleWallCollision();
+        if (SETTINGS.GAME_MODE === GAME_MODE.FOUR_PLAYER) {
+            if (this._isBallPaddleCollision(this.player2)) {
+                this._handlePaddleCollision(this.player2);
+            }
+            if (this._isBallPaddleCollision(this.player3)) {
+                this._handlePaddleCollision(this.player3);
+            }
+            if (this._isBallPaddleCollision(this.player4)) {
+                this._handlePaddleCollision(this.player4);
             }
         } else if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
             if (this._isBallPaddleCollision(this.ai)) {
@@ -587,57 +547,67 @@ class Game {
         }
     }
 
-    _isBallWallCollision() {
-        return this.ball.x + this.ball.radius >
-            this.canvas.width - 10 - SETTINGS.PADDLE_WIDTH;
-    }
-
-    _handleWallCollision() {
-        this.ball.dx *= -1;
-        this.ball.x = this.canvas.width - 10 - SETTINGS.PADDLE_WIDTH - this.ball.radius;
-        // Adjust ball's y position to stay within canvas height
-        if (this.ball.y - this.ball.radius < 0) {
-            this.ball.y = this.ball.radius;
-        } else if (this.ball.y + this.ball.radius > this.canvas.height) {
-            this.ball.y = this.canvas.height - this.ball.radius;
+    _isBallPaddleCollision(paddle) {
+        if (paddle.isHorizontal) {
+            return (
+                this.ball.x > paddle.x &&
+                this.ball.x < paddle.x + paddle.width &&
+                this.ball.y - this.ball.radius < paddle.y + paddle.height &&
+                this.ball.y + this.ball.radius > paddle.y
+            );
+        } else {
+            return (
+                this.ball.x - this.ball.radius < paddle.x + paddle.width &&
+                this.ball.x + this.ball.radius > paddle.x &&
+                this.ball.y > paddle.y &&
+                this.ball.y < paddle.y + paddle.height
+            );
         }
     }
 
-    _isBallPaddleCollision(paddle) {
-        return (
-            this.ball.x - this.ball.radius < paddle.x + paddle.width &&
-            this.ball.x + this.ball.radius > paddle.x &&
-            this.ball.y > paddle.y &&
-            this.ball.y < paddle.y + paddle.height
-        );
-    }
-
     _handlePaddleCollision(paddle) {
-        this.ball.dx *= -1;
-        if (paddle === this.player1) {
-            this.ball.x = paddle.x + paddle.width + this.ball.radius;
-            this.ball.dy += paddle.lastDy * 0.2;
+        if (paddle.isHorizontal) {
+            this.ball.dy *= -1;
+            if (paddle === this.player3) {
+                this.ball.y = paddle.y + paddle.height + this.ball.radius;
+                this.ball.dx += paddle.lastDx * 0.2;
+            } else {
+                this.ball.y = paddle.y - this.ball.radius;
+                this.ball.dx += paddle.lastDx * 0.2;
+            }
         } else {
-            this.ball.x = paddle.x - this.ball.radius;
-            this.ball.dy += paddle.lastDy * 0.2;
+            this.ball.dx *= -1;
+            if (paddle === this.player1) {
+                this.ball.x = paddle.x + paddle.width + this.ball.radius;
+                this.ball.dy += paddle.lastDy * 0.2;
+            } else {
+                this.ball.x = paddle.x - this.ball.radius;
+                this.ball.dy += paddle.lastDy * 0.2;
+            }
         }
     }
 
     _checkScore() {
         if (this.ball.x < 0) {
-            this.player2Score++;
+            this.players24Score++; // Player 2 scores
         } else if (this.ball.x > this.canvas.width) {
-            this.player1Score++;
+            this.players13Score++; // Player 1 scores
+        } else if (this.ball.y < this.ball.radius) {
+            this.players13Score++; // Player 3 scores
+        } else if (this.ball.y > this.canvas.height - this.ball.radius) {
+            this.players24Score++; // Player 4 scores
         }
     }
 
     _checkWin() {
-        if (this.player1Score >= SETTINGS.WINNING_SCORE ||
-            this.player2Score >= SETTINGS.WINNING_SCORE) {
+        if (
+            this.players13Score >= SETTINGS.WINNING_SCORE ||
+            this.players24Score >= SETTINGS.WINNING_SCORE) {
             this._endGame();
         }
     }
 }
+
 
 // Função principal para inicializar o jogo
 function main() {
@@ -650,3 +620,17 @@ function main() {
     // Inicia o jogo
     game.start();
 }
+
+
+function main() {
+    const canvas = document.getElementById('gameCanvas');
+    canvas.width = SETTINGS.CANVAS_WIDTH;
+    canvas.height = SETTINGS.CANVAS_HEIGHT;
+
+    const game = new Game(canvas);
+
+    // Inicia o jogo
+    game.start();
+}
+
+main();
