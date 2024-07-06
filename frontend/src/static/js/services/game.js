@@ -25,7 +25,7 @@ const SETTINGS = {
     BALL_SPEED_INCREASE: 0.05,
     PLAYER_SPEED: 10,
     GAME_MODE: localStorage.getItem('gameMode') || GAME_MODE.SOLO_PLAYER, // 'single' or 'local'
-    AI_DIFFICULTY: 'medium', // 'easy', 'medium', 'hard', 'legend'
+    AI_DIFFICULTY: localStorage.getItem('aiDifficulty') || 'medium', // 'easy', 'medium', 'hard', 'legend'
     AI_TIME_STEPS: 0.01667, // Considering 60 fps
     WINNING_SCORE: 3, // Define winning score
     COUNTDOWN_TIME: 3, // Countdown time in seconds
@@ -59,7 +59,9 @@ const MS_TO_S = 1000;
 // Key mappings for player movement
 const CONTROLS = {
     WASD: { UP: 'W', DOWN: 'S' },
-    ARROWS: { UP: 'ArrowUp', DOWN: 'ArrowDown' }
+    ARROWS: { UP: 'ArrowUp', DOWN: 'ArrowDown' },
+    AD: { LEFT: 'A', RIGHT: 'D' },
+    LR: { LEFT: 'L', RIGHT: 'R' }
 };
 
 // KeyHandler class to handle keyboard inputs
@@ -79,35 +81,54 @@ class KeyHandler {
 
 // Player class to represent each player
 class Player {
-    constructor(canvas, x, y) {
+    constructor(canvas, x, y, isHorizontal = false) {
         this.canvas = canvas;
         this.keyHandler = new KeyHandler();
         this.x = x;
         this.y = y;
-        this.width = SETTINGS.PADDLE_WIDTH;
-        this.height = SETTINGS.PADDLE_HEIGHT;
+        this.width = isHorizontal ? SETTINGS.PADDLE_HEIGHT : SETTINGS.PADDLE_WIDTH;
+        this.height = isHorizontal ? SETTINGS.PADDLE_WIDTH : SETTINGS.PADDLE_HEIGHT;
         this.dy = 0;
+        this.dx = 0;
         this.lastDy = 0;
+        this.lastDx = 0;
+        this.isHorizontal = isHorizontal;
     }
 
-    move(wKey, sKey, upKey, downKey) {
-        if ((upKey !== null && this.keyHandler.isKeyPressed(upKey))
-            || (wKey !== null && this.keyHandler.isKeyPressed(wKey))) {
-            this.dy = -SETTINGS.PLAYER_SPEED;
-        } else if ((downKey !== null && this.keyHandler.isKeyPressed(downKey))
-            || (sKey !== null && this.keyHandler.isKeyPressed(sKey))) {
-            this.dy = SETTINGS.PLAYER_SPEED;
+    move(upKey, downKey, leftKey, rightKey) {
+        if (this.isHorizontal) {
+            if ((leftKey !== null && this.keyHandler.isKeyPressed(leftKey))
+                || (upKey !== null && this.keyHandler.isKeyPressed(upKey))) {
+                this.dx = -SETTINGS.PLAYER_SPEED;
+            } else if ((rightKey !== null && this.keyHandler.isKeyPressed(rightKey))
+                || (downKey !== null && this.keyHandler.isKeyPressed(downKey))) {
+                this.dx = SETTINGS.PLAYER_SPEED;
+            } else {
+                this.dx = 0;
+            }
+
+            this.x += this.dx;
+            if (this.x < 0) this.x = 0;
+            if (this.x + this.width > this.canvas.width) this.x = this.canvas.width - this.width;
+
+            this.lastDx = this.dx;
         } else {
-            this.dy = 0;
+            if ((upKey !== null && this.keyHandler.isKeyPressed(upKey))
+                || (leftKey !== null && this.keyHandler.isKeyPressed(leftKey))) {
+                this.dy = -SETTINGS.PLAYER_SPEED;
+            } else if ((downKey !== null && this.keyHandler.isKeyPressed(downKey))
+                || (rightKey !== null && this.keyHandler.isKeyPressed(rightKey))) {
+                this.dy = SETTINGS.PLAYER_SPEED;
+            } else {
+                this.dy = 0;
+            }
+
+            this.y += this.dy;
+            if (this.y < 0) this.y = 0;
+            if (this.y + this.height > this.canvas.height) this.y = this.canvas.height - this.height;
+
+            this.lastDy = this.dy;
         }
-
-        this.y += this.dy;
-        if (this.y < 0)
-            this.y = 0;
-        if (this.y + this.height > this.canvas.height)
-            this.y = this.canvas.height - this.height;
-
-        this.lastDy = this.dy;
     }
 }
 
@@ -335,7 +356,7 @@ class Render {
         this.context = canvas.getContext('2d');
     }
 
-    drawGame(player1, player2, player3, player4, ball, players13Score, players24Score) {
+    drawGame(player1, player2, player3, player4, ball, player1Score, player2Score) {
         this.context.fillStyle = SETTINGS.BACKGROUND_COLOR;
 
         // Fill the canvas with background color
@@ -350,7 +371,7 @@ class Render {
         }
 
         this._drawBall(ball);
-        this._drawScores(players13Score, players24Score);
+        this._drawScores(player1Score, player2Score);
     }
 
     resetBall(ball) {
@@ -404,10 +425,8 @@ class Render {
         this.context.setLineDash(
             [SETTINGS.NET_DASH_LENGTH, SETTINGS.NET_GAP_LENGTH]);
         this.context.beginPath();
-        this.context.moveTo(0, 0);
-        this.context.lineTo(this.canvas.width, this.canvas.height);
-        this.context.moveTo(this.canvas.width, 0);
-        this.context.lineTo(0, this.canvas.height);
+        this.context.moveTo(this.canvas.width / 2, 0);
+        this.context.lineTo(this.canvas.width / 2, this.canvas.height);
         this.context.stroke();
         // Reset to solid lines for other drawings
         this.context.setLineDash([]);
@@ -509,22 +528,34 @@ class Game {
     _update() {
         if (!this.isGameRunning || this.isGamePaused) return;
 
-        this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
-
-        if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
+        if (SETTINGS.GAME_MODE === GAME_MODE.TRAINING) {
+            this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
+            this.ball.move();
+            this._checkCollisions();
+        } else if (SETTINGS.GAME_MODE === GAME_MODE.SOLO_PLAYER) {
+            this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
             this.ai.move(this.ball);
+            this.ball.move();
+            this._checkCollisions();
+            this._checkScore();
+            this._checkWin();
         } else if (SETTINGS.GAME_MODE === GAME_MODE.LOCAL_PVP) {
+            this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
             this.player2.move(null, null, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
+            this.ball.move();
+            this._checkCollisions();
+            this._checkScore();
+            this._checkWin();
         } else if (SETTINGS.GAME_MODE === GAME_MODE.FOUR_PLAYER) {
+            this.player1.move(CONTROLS.WASD.UP, CONTROLS.WASD.DOWN, null, null);
             this.player2.move(null, null, CONTROLS.ARROWS.UP, CONTROLS.ARROWS.DOWN);
             this.player3.move(null, null, CONTROLS.AD.LEFT, CONTROLS.AD.RIGHT);
             this.player4.move(null, null, CONTROLS.LR.LEFT, CONTROLS.LR.RIGHT);
+            this.ball.move();
+            this._checkCollisions();
+            this._checkScore();
+            this._checkWin();
         }
-
-        this.ball.move();
-        this._checkCollisions();
-        this._checkScore();
-        this._checkWin();
 
         // Reset the ball if it goes out of bounds
         if (
@@ -626,6 +657,11 @@ class Game {
 
 function main() {
     const canvas = document.getElementById('gameCanvas');
+    if (!canvas) {
+        console.error('Canvas element not found');
+        return;
+    }
+
     canvas.width = SETTINGS.CANVAS_WIDTH;
     canvas.height = SETTINGS.CANVAS_HEIGHT;
 
@@ -635,4 +671,7 @@ function main() {
     game.start();
 }
 
+main();
+
 export { main };
+

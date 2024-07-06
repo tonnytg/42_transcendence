@@ -17,9 +17,9 @@ export default function Pong() {
                                 </div>
                             </div>
 
-                            <div class="container">
-                                <div class="row border border-3">
-                                    <canvas id="gameCanvas" width="800" height="600"></canvas>
+                            <div class="container mt-3">
+                                <div class="row border border-3 p-2">
+                                    <canvas id="gameCanvas" class="w-100 h-100" width="800" height="600"></canvas>
                                 </div>
                             </div>
 
@@ -44,7 +44,12 @@ export default function Pong() {
                         `;
 
     element.addEventListener('DOMNodeInserted', () => {
-        gameMain();
+        setTimeout(() => {
+            const canvas = document.getElementById('gameCanvas');
+            if (canvas) {
+                gameMain();
+            }
+        }, 0);
     });
 
     return element;

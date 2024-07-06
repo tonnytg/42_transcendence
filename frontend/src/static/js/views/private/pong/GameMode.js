@@ -5,7 +5,6 @@ export default function GameMode() {
 
     const element = document.createElement('div');
     element.innerHTML = `
-        <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
         <!-- Navigation bar | Web component -->
         <div class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -21,33 +20,29 @@ export default function GameMode() {
         <div class="container mt-3">
             <div class="row border border-3 p-2">
                     <h1 class="text-center">Escolha o Modo de Jogo</h1>
-                    <div class="d-flex justify-content-center align-content-center">
+                    <div class="d-flex justify-content-center">
                         <button class="btn btn-primary mx-2" onclick="selectGameMode('TRAINING')">Han Solo</button>
                         <button class="btn btn-primary mx-2" onclick="selectGameMode('SOLO_PLAYER')">Versus Skynet</button>
-                        <button class="btn btn-primary mx-2" onclick="showPlayerNameInputs('LOCAL_PVP')">Human vs Human</button>
-                        <button class="btn btn-primary mx-2" onclick="showPlayerNameInputs('FOUR_PLAYER')">Apocalypse</button>
+                        <button class="btn btn-primary mx-2" onclick="selectGameMode('LOCAL_PVP')">Human vs Human</button>
+                        <button class="btn btn-primary mx-2" onclick="selectGameMode('FOUR_PLAYER')">Apocalypse</button>
                     </div>
-                    <div id="playerNames" class="mt-3" style="display: none;">
-                        <div class="mb-3">
-                            <label for="player1Name" class="form-label">Player 1 Name</label>
-                            <input type="text" class="form-control" id="player1Name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="player2Name" class="form-label">Player 2 Name</label>
-                            <input type="text" class="form-control" id="player2Name">
-                        </div>
-                        <div id="player34Names" style="display: none;">
-                            <div class="mb-3">
-                                <label for="player3Name" class="form-label">Player 3 Name</label>
-                                <input type="text" class="form-control" id="player3Name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="player4Name" class="form-label">Player 4 Name</label>
-                                <input type="text" class="form-control" id="player4Name">
-                            </div>
-                        </div>
-                        <button class="btn btn-success" onclick="startGame()">Start Game</button>
+                    <div id="difficultySelection" class="mt-3" style="display: none;">
+                        <h3 class="text-center">Escolha a Dificuldade</h3>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-dark mx-2" onclick="setDifficulty('easy')">
+                                <i class="fas fa-baby"></i> Baby
+                            </button>
+                            <button class="btn btn-dark mx-2" onclick="setDifficulty('medium')">
+                                <i class="fas fa-smile"></i> Be happy
+                            </button>
+                            <button class="btn btn-dark mx-2" onclick="setDifficulty('hard')">
+                                <i class="fas fa-skull-crossbones"></i> Death
+                            </button>
+                            <button class="btn btn-dark mx-2" onclick="setDifficulty('legend')">
+                                <i class="fas fa-ghost"></i> Legend
+                            </button>
                     </div>
+                </div>
             </div>
         </div>
 
@@ -71,43 +66,18 @@ export default function GameMode() {
         </div>
     `;
 
-    window.showPlayerNameInputs = function(mode) {
-        document.getElementById('playerNames').style.display = 'block';
-        if (mode === 'FOUR_PLAYER') {
-            document.getElementById('player34Names').style.display = 'block';
-        } else {
-            document.getElementById('player34Names').style.display = 'none';
-        }
-        localStorage.setItem('gameMode', mode);
-    };
-
-    window.startGame = function() {
-        const player1Name = document.getElementById('player1Name').value || 'Player 1';
-        const player2Name = document.getElementById('player2Name').value || 'Player 2';
-        const player3Name = document.getElementById('player3Name').value || 'Player 3';
-        const player4Name = document.getElementById('player4Name').value || 'Player 4';
-
-        const gameMode = localStorage.getItem('gameMode');
-        localStorage.setItem('player1Name', player1Name);
-        localStorage.setItem('player2Name', player2Name);
-
-        if (gameMode === 'FOUR_PLAYER') {
-            localStorage.setItem('player3Name', player3Name);
-            localStorage.setItem('player4Name', player4Name);
-        }
-
-        navigateTo('/pong');
-    };
-
     window.selectGameMode = function(mode) {
-        if (mode !== 'LOCAL_PVP' && mode !== 'FOUR_PLAYER') {
-            localStorage.setItem('player1Name', playerInfo.nickname || 'Player 1');
-            localStorage.setItem('player2Name', 'Skynet');
-            localStorage.setItem('gameMode', mode);
-            navigateTo('/pong');
+        localStorage.setItem('gameMode', mode);
+        if (mode === 'SOLO_PLAYER') {
+            document.getElementById('difficultySelection').style.display = 'block';
         } else {
-            showPlayerNameInputs(mode);
+            navigateTo('/pong');
         }
+    };
+
+    window.setDifficulty = function(difficulty) {
+        localStorage.setItem('aiDifficulty', difficulty);
+        navigateTo('/pong');
     };
 
     return element;
