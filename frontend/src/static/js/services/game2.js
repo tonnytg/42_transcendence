@@ -639,14 +639,16 @@ class Game {
     }
 }
 
-// Função principal para inicializar o jogo
 function main() {
+    // Initialize canvas, i.e., 2D pong table's width and height
     const canvas = document.getElementById('gameCanvas');
     canvas.width = SETTINGS.CANVAS_WIDTH;
     canvas.height = SETTINGS.CANVAS_HEIGHT;
 
     const game = new Game(canvas);
 
-    // Inicia o jogo
+    // Start the game
     game.start();
 }
+
+export { main };

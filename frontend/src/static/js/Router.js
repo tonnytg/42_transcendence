@@ -5,6 +5,7 @@ import Dashboard from './views/private/dashboard/Dashboard.js';
 import Profile from './views/private/profile/Profile.js';
 import Chat from './views/private/chat/Chat.js';
 import Pong from './views/private/pong/Pong.js';
+import Pong2 from './views/private/pong/Pong2.js';
 import ValidateMFA from './views/private/mfa/ValidateMFA.js';
 import GameRoom from './views/private/gameRoom/GameRoom.js';
 
@@ -46,6 +47,9 @@ export async function Router() {
         case '/pong':
             component = Pong();
             break;
+        case '/pong2':
+            component = Pong2();
+            break;            
         case '/game-room':
             const uuid = queryParams.uuid;
             component = await GameRoom(uuid); // Aguarde a resolução da função assíncrona
