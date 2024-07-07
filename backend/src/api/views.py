@@ -422,6 +422,51 @@ def game_room(request):
 
 
 @csrf_exempt
+def register_game_room(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            game_room_description = data.get('game_room_description', '')
+            game_room_type = data.get('game_room_type', 0)
+            uuid_player_1 = data.get('uuid_player_1')
+            uuid_player_2 = data.get('uuid_player_2', None)
+            uuid_player_3 = data.get('uuid_player_3', None)
+            uuid_player_4 = data.get('uuid_player_4', None)
+
+            uuid_player_1 = data.get('uuid_player_1')
+            uuid_player_2 = data.get('uuid_player_2', None)
+            uuid_player_3 = data.get('uuid_player_3', None)
+            uuid_player_4 = data.get('uuid_player_4', None)
+
+            score_player_1 = data.get('score_player_1', 0)
+            score_player_2 = data.get('score_player_2', 0)
+            score_player_3 = data.get('score_player_3', 0)
+            score_player_4 = data.get('score_player_4', 0)
+
+            if not uuid_player_1:
+                return JsonResponse({'status': 'error', 'message': 'uuid_player_1 is required'}, status=400)
+
+            game_room = GameRoom.objects.create(
+                game_room_description=game_room_description,
+                game_room_type=game_room_type,
+                uuid_player_1=uuid_player_1,
+                uuid_player_2=uuid_player_2,
+                uuid_player_3=uuid_player_3,
+                uuid_player_4=uuid_player_4,
+
+                score_player_1=score_player_1,
+                score_player_2=score_player_2,
+                score_player_3=score_player_3,
+                score_player_4=score_player_4,                
+            )
+
+            return JsonResponse({'status': 'success', 'game_room_uuid': str(game_room.uuid_game_room)}, status=201)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
 def game_room_info(request):
     logger.info("game room info")
     
@@ -453,6 +498,7 @@ def game_room_info(request):
             'score_player_2': game_room.score_player_2,
             'score_player_3': game_room.score_player_3,
             'score_player_4': game_room.score_player_4,
+            'create_at': game_room.created_at
         }
 
         return JsonResponse({'status': 'success', 'game_room': game_room_data}, status=200)

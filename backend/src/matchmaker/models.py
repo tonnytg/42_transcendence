@@ -14,6 +14,7 @@ class GameRoom(models.Model):
     score_player_2 = models.IntegerField(default=0)
     score_player_3 = models.IntegerField(default=0)
     score_player_4 = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Game Room {self.uuid_game_room}'
