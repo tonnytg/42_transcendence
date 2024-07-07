@@ -7,6 +7,7 @@ import Chat from './views/private/chat/Chat.js';
 import Pong from './views/private/pong/Pong.js';
 import ValidateMFA from './views/private/mfa/ValidateMFA.js';
 import GameRoom from './views/private/gameRoom/GameRoom.js';
+import GameMode from './views/private/pong/GameMode.js';
 
 function getQueryParams() {
     const params = new URLSearchParams(window.location.search);
@@ -36,20 +37,23 @@ export async function Router() {
             break;
         case '/mfa':
             component = await ValidateMFA();
-            break;            
+            break;
         case '/profile':
             component = await Profile();
-            break;  
+            break;
         case '/chat':
             component = await Chat();
-            break;                       
+            break;
         case '/pong':
             component = Pong();
             break;
+            case '/gamemode':
+                component = GameMode();
+                break;
         case '/game-room':
             const uuid = queryParams.uuid;
             component = await GameRoom(uuid); // Aguarde a resolução da função assíncrona
-            break;            
+            break;
         default:
             component = document.createElement('div');
             component.textContent = 'Page not found';

@@ -1,51 +1,25 @@
 import { main as gameMain } from '/static/js/services/game.js';
 
 export default function Pong() {
+    const playerInfo = JSON.parse(localStorage.getItem('playerInfo')) || { nickname: 'Player 1' };
+
     const element = document.createElement('div');
     element.innerHTML = `
                             <!-- Navigation bar | Web component -->
-                            <navigation-bar></navigation-bar>
+                            <div class="navbar navbar-expand-lg navbar-light bg-light">
+                                <div class="container-fluid">
+                                    <span class="navbar-brand mb-0 h1">${playerInfo.nickname ? `Welcome, ${playerInfo.nickname}` : 'Welcome'}</span>
+                                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                                        <li class="nav-item">
+                                            <button type="button" class="btn btn-link nav-link" onclick="navigateToProfile()">Profile</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
                             <div class="container mt-3">
-                                <div class="row border border-3 boder-black p-2">
-                                    <div class="col-12 col-md-8">
-                                        <div class="">
-                                            <canvas id="gameCanvas" class="w-100 h-100" width="800" height="600"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="border border-3 boder-black m-1 p-4">
-                                            <h2>Chat</h2>
-                                            <!-- Conversation Messages Simulation-->
-                                            <div>
-                                                <div class="conversation" id="conversation">
-                                                    <div class="messages">
-                                                        <h4>Alguém disse:</h4>
-                                                        <div class="bg-ligh friend__messages">
-                                                            <div class="friend__message">Olá, tudo bem?</div>
-                                                            <div class="friend__message">Estou bem, e você?</div>
-                                                            <div class="friend__message">Também estou bem, obrigado por perguntar.</div>
-                                                        </div>
-                                                        <div class="you">
-                                                            <h4>Você:</h4>
-                                                            <div class="you__messages align-items-right">
-                                                                <div class="you__message">Olá, tudo bem?</div>
-                                                                <div class="you__message">Estou bem, e você?</div>
-                                                                <div class="you__message">Também estou bem, obrigado por perguntar.</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="chat" id="chat">
-                                                <div class="chat__messages" id="chatMessages"></div>
-                                                <form id="chatForm">
-                                                    <input type="text" class="form-control" id="chatInput" placeholder="Digite sua mensagem">
-                                                    <button type="submit" class="btn btn-primary w-100 mt-2">Enviar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="row border border-3 p-2">
+                                    <canvas id="gameCanvas" class="w-100 h-100" width="800" height="600"></canvas>
                                 </div>
                             </div>
 
@@ -70,7 +44,12 @@ export default function Pong() {
                         `;
 
     element.addEventListener('DOMNodeInserted', () => {
-        gameMain();
+        setTimeout(() => {
+            const canvas = document.getElementById('gameCanvas');
+            if (canvas) {
+                gameMain();
+            }
+        }, 0);
     });
 
     return element;

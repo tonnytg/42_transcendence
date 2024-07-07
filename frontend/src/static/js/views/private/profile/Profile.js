@@ -30,7 +30,7 @@ export default async function Profile() {
     try {
         // Função para buscar informações do usuário na API
         const userInfo = await fetchApiLocal('/api/player-info');
-        
+
         // Elemento principal que será retornado
         const element = document.createElement('div');
 
@@ -48,33 +48,54 @@ export default async function Profile() {
             const renderProfileForm = () => {
                 // Formulário para editar informações do perfil
                 const profileForm = `
+        <!-- Navigation bar | Web component -->
+        <div class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">Welcome</span>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-link nav-link" onclick="navigateToProfile()">Profile</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <div class="row justify-content-between">
+                <!-- Left column for Games -->
+                    <div class="card">
+                        <div class="card-header">Profile</div>
+                        <div class="card-body">
                     <form id="profileForm">
                         <div class="mb-3">
-                            <label for="nickname" class="form-label">Nickname</label>
+                            <label for="nickname" class="form-label">Nickname (You can change your nickname here)</label>
                             <input type="text" class="form-control" id="nickname" value="${userInfo.nickname}" required>
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" value="${userInfo.username}" required>
+                            <input type="text" class="form-control" id="username" value="${userInfo.username}" required disabled>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" value="${userInfo.email}" required>
-                        </div>            
+                            <input type="text" class="form-control" id="email" value="${userInfo.email}" required disabled>
+                        </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="isMFAEnabled" ${userInfo.is_mfa_enabled ? 'checked' : ''}>
                             <label class="form-check-label" for="isMFAEnabled">Multi-Factor Authentication Enabled</label>
                         </div>
-                        <div class="mb-3">
+                        <!--<div class="mb-3">
                             <label for="theme" class="form-label">Theme</label>
                             <select class="form-select" id="theme" required>
                                 <option value="light" ${userInfo.theme === 'light' ? 'selected' : ''}>Light</option>
                                 <option value="dark" ${userInfo.theme === 'dark' ? 'selected' : ''}>Dark</option>
                             </select>
-                        </div>
+                        </div>-->
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                     <button class="btn btn-secondary mt-3" id="backToDashboard">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+</div>
                 `;
 
                 element.innerHTML = profileForm;
